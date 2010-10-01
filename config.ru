@@ -42,7 +42,6 @@ class Rack::Proxy
     sub_request["Accept-Encoding"] = req.accept_encoding
     sub_request["Referer"] = req.referer
     
-    p sub_request
     sub_response = Net::HTTP.start(uri.host, uri.port) do |http|
       http.request(sub_request)
     end
@@ -52,7 +51,7 @@ class Rack::Proxy
       headers[k] = v unless k.to_s =~ /cookie|content-length|transfer-encoding/i
     end
     body = sub_response.read_body
-    
+    p body
     [sub_response.code.to_i, headers, [body]]
   end
 end
