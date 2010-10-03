@@ -9,6 +9,9 @@ class PackParser
   
   def initialize(data)
     @current = @data = data
+    r = []
+    @data.each_byte {|b| r << b}
+    p r[0..100]
     @objects = []
   end
   
@@ -54,6 +57,7 @@ class PackParser
   
   def match_object_header
     hint_type_and_size = current[0].to_s(2)
+    p hint_type_and_size
     type               = nil
     size_infos         = []
     continue   =  (hint_type_and_size[0..0] == "1")
@@ -128,7 +132,9 @@ class Parser
   end
   
   def parse
-    if next_pkt_line == "NAK\n"
+    pkt_line = next_pkt_line
+    p pkt_line
+    if pkt_line  == "NAK\n"
       while pkt_line = next_pkt_line
         if pkt_line[0] == "\002"[0]
           @remotes << pkt_line[1..-1]
@@ -154,16 +160,9 @@ class Parser
       pkt_line
     end
   end
-  
-  def next_remote_line
-    length = current[0..4].to_i(16)
-    remote_line = current[4..(length - 1)]
-    @current = current[length..-1]
-    remote_line
-  end
 end  
   
-parser = Parser.new(File.read("result.bin"))
+parser = Parser.new(File.read("test/packfile.bin"))
 parser.parse
 parser.remotes.join("").split(/\n|\r/).each do |remote|
   puts "remote: #{remote}"
