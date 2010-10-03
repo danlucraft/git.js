@@ -1,6 +1,7 @@
 #require 'rubygems'
 require 'ext/myzlib'
-require 'zlib'
+require 'digest/sha1'
+
 class PackParser
   include MyZlib
   
@@ -11,12 +12,12 @@ class PackParser
   end
   
   def parse
-    p @data
     match_prefix
     match_version(2)
     num_objects = match_number_of_objects
     puts "expecting #{num_objects} objects"
-    num_objects.times { match_object }
+    num_objects.times { p match_object }
+    p @current.length
     nil
   end
   
@@ -48,7 +49,9 @@ class PackParser
   def match_object
     header = match_object_header
     puts "\n\n*** matching object #{header[:type]} #{header[:size]}"
-    p match_object_data(header)
+    data = match_object_data(header)
+    {:data => data,
+      :sha => Digest::SHA1.hexdigest("#{header[:type]} #{header[:size]}\0#{data}")}
   end
   
   def match_object_header
@@ -77,14 +80,6 @@ class PackParser
     data, used = *back
     p [used, data.length]
     advance(used)
-    data
-  end
-  
-  def zlib_match_object_data(header)
-    data = Zlib::Inflate.inflate(current)
-    compressed_data = Zlib::Deflate.deflate(data)
-    advance(compressed_data.length)
-    p [compressed_data.length, data.length]
     data
   end
   
@@ -165,7 +160,7 @@ class Parser
   end
 end  
   
-parser = Parser.new(File.read("stream.bin"))
+parser = Parser.new(File.read("result.bin"))
 parser.parse
 p parser.remotes
 p parser.packs

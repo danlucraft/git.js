@@ -23,25 +23,21 @@ VALUE method_inflate(VALUE self, VALUE size_out, VALUE input, VALUE in_length) {
 	stream.avail_out = size;
 	stream.next_in = whereat;
 	stream.avail_in = len;
-  printf("avail_out: %d, avail_in: %d\n", size, len);
-
+  
   inflateInit(&stream);
   
 	for (;;) {
-    
-  	int ret = inflate(&stream, 0);  
+    int ret = inflate(&stream, 0);  
     used = len - stream.avail_in;
-    printf("used: %d\n", used);
     whereat += used;
   	const char *err;
     if (stream.total_out == size && ret == Z_STREAM_END) {
-      printf("finished stream\n");
 			break;
     }
     else {
   		if (ret != Z_OK) {
         printf("inflate returned %d\n", ret);
-        exit(1);
+        //exit(1);
   			break;
       }
   		stream.next_in = whereat;

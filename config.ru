@@ -51,7 +51,7 @@ class Rack::Proxy
       headers[k] = v unless k.to_s =~ /cookie|content-length|transfer-encoding/i
     end
     body = sub_response.read_body
-    p body
+    File.open("result.bin", "w") {|fout| fout.print body }
     [sub_response.code.to_i, headers, [body]]
   end
 end
