@@ -9,16 +9,15 @@ class PackParser
   
   def initialize(data)
     @current = @data = data
+    @objects = []
   end
   
   def parse
     match_prefix
     match_version(2)
     num_objects = match_number_of_objects
-    puts "expecting #{num_objects} objects"
-    num_objects.times { p match_object }
-    p @current.length
-    nil
+    num_objects.times { @objects << match_object }
+    @objects
   end
   
   private
@@ -48,7 +47,6 @@ class PackParser
   
   def match_object
     header = match_object_header
-    puts "\n\n*** matching object #{header[:type]} #{header[:size]}"
     data = match_object_data(header)
     {:data => data,
       :sha => Digest::SHA1.hexdigest("#{header[:type]} #{header[:size]}\0#{data}")}
@@ -78,7 +76,6 @@ class PackParser
   def myzlib_match_object_data(header)
     back = inflate(header[:size], current, current.length)
     data, used = *back
-    p [used, data.length]
     advance(used)
     data
   end
@@ -132,12 +129,13 @@ class Parser
   
   def parse
     if next_pkt_line == "NAK\n"
-      puts "matched \"NAK\""
       while pkt_line = next_pkt_line
         if pkt_line[0] == "\002"[0]
-          @remotes << pkt_line
+          @remotes << pkt_line[1..-1]
         elsif pkt_line[0] == "\001"[0]
-          @packs << PackParser.new(pkt_line[1..-1]).parse
+          if pkt_line[1..4] == "PACK"
+            @packs << PackParser.new(pkt_line[1..-1]).parse
+          end
         end
       end
     else
@@ -147,9 +145,14 @@ class Parser
   
   def next_pkt_line
     length = current[0..4].to_i(16)
-    pkt_line = current[4..(length-1)]
-    @current = current[length..-1]
-    pkt_line
+    if length == 0
+      @current = current[4..-1]
+      nil
+    else
+      pkt_line = current[4..(length-1)]
+      @current = current[length..-1]
+      pkt_line
+    end
   end
   
   def next_remote_line
@@ -162,6 +165,8 @@ end
   
 parser = Parser.new(File.read("result.bin"))
 parser.parse
-p parser.remotes
+parser.remotes.join("").split(/\n|\r/).each do |remote|
+  puts "remote: #{remote}"
+end
 p parser.packs
 
