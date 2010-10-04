@@ -32,6 +32,7 @@ class Rack::Proxy
       sub_request.body = body
       sub_request.content_length = req.content_length
       sub_request.content_type = req.content_type
+      p req.content_type
       if (req.content_type).include?("application/x-git-upload-pack-request")
         sub_request.content_type = "application/x-git-upload-pack-request"
       end

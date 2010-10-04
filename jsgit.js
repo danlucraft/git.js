@@ -1,121 +1,13 @@
-String.prototype.repeat = function( num ) {
-	for( var i = 0, buf = ""; i < num; i++ ) buf += this;
-	return buf;
-}
-
-String.prototype.ljust = function( width, padding ) {
-	padding = padding || " ";
-	padding = padding.substr( 0, 1 );
-	if( this.length < width )
-		return this + padding.repeat( width - this.length );
-	else
-		return this.toString();
-}
-
-String.prototype.rjust = function( width, padding ) {
-	padding = padding || " ";
-	padding = padding.substr( 0, 1 );
-	if( this.length < width )
-		return padding.repeat( width - this.length ) + this;
-	else
-		return this.toString();
-}
-
-var BinaryFile = function(strData, iDataOffset, iDataLength) {
-	var data = strData;
-	var dataOffset = iDataOffset || 0;
-	var dataLength = 0;
-
-	this.getRawData = function() {
-		return data;
-	}
-  
-  this.slice = function(begin, end) {
-    var arr = [];
-    var i;
-    for (i = begin; i < end; i++) {
-      arr.push(this.getByteAt(i));
+Array.prototype.compare = function(testArr) {
+    if (this.length != testArr.length) return false;
+    for (var i = 0; i < testArr.length; i++) {
+        if (this[i].compare) { 
+            if (!this[i].compare(testArr[i])) return false;
+        }
+        if (this[i] !== testArr[i]) return false;
     }
-    return arr;
-  }
-  
-	if (typeof strData == "string") {
-		dataLength = iDataLength || data.length;
-
-		this.getByteAt = function(iOffset) {
-			return data.charCodeAt(iOffset + dataOffset) & 0xFF;
-		}
-	} else if (typeof strData == "unknown") {
-		dataLength = iDataLength || IEBinary_getLength(data);
-
-		this.getByteAt = function(iOffset) {
-			return IEBinary_getByteAt(data, iOffset + dataOffset);
-		}
-	}
-
-	this.getLength = function() {
-		return dataLength;
-	}
-
-	this.getSByteAt = function(iOffset) {
-		var iByte = this.getByteAt(iOffset);
-		if (iByte > 127)
-			return iByte - 256;
-		else
-			return iByte;
-	}
-
-	this.getShortAt = function(iOffset, bBigEndian) {
-		var iShort = bBigEndian ? 
-			(this.getByteAt(iOffset) << 8) + this.getByteAt(iOffset + 1)
-			: (this.getByteAt(iOffset + 1) << 8) + this.getByteAt(iOffset)
-		if (iShort < 0) iShort += 65536;
-		return iShort;
-	}
-	this.getSShortAt = function(iOffset, bBigEndian) {
-		var iUShort = this.getShortAt(iOffset, bBigEndian);
-		if (iUShort > 32767)
-			return iUShort - 65536;
-		else
-			return iUShort;
-	}
-	this.getLongAt = function(iOffset, bBigEndian) {
-		var iByte1 = this.getByteAt(iOffset),
-			iByte2 = this.getByteAt(iOffset + 1),
-			iByte3 = this.getByteAt(iOffset + 2),
-			iByte4 = this.getByteAt(iOffset + 3);
-
-		var iLong = bBigEndian ? 
-			(((((iByte1 << 8) + iByte2) << 8) + iByte3) << 8) + iByte4
-			: (((((iByte4 << 8) + iByte3) << 8) + iByte2) << 8) + iByte1;
-		if (iLong < 0) iLong += 4294967296;
-		return iLong;
-	}
-	this.getSLongAt = function(iOffset, bBigEndian) {
-		var iULong = this.getLongAt(iOffset, bBigEndian);
-		if (iULong > 2147483647)
-			return iULong - 4294967296;
-		else
-			return iULong;
-	}
-	this.getStringAt = function(iOffset, iLength) {
-		var aStr = [];
-		for (var i=iOffset,j=0;i<iOffset+iLength;i++,j++) {
-			aStr[j] = String.fromCharCode(this.getByteAt(i));
-		}
-		return aStr.join("");
-	}
-
-	this.getCharAt = function(iOffset) {
-		return String.fromCharCode(this.getByteAt(iOffset));
-	}
-	this.toBase64 = function() {
-		return window.btoa(data);
-	}
-	this.fromBase64 = function(strBase64) {
-		data = window.atob(strBase64);
-	}
-};
+    return true;
+}
 
 JsGit = {
   
@@ -127,11 +19,21 @@ JsGit = {
     }
     return result;
   },
+  
+  stringToBytes: function(string) {
+    var bytes = []; 
+    var i; 
+    for(i = 0; i < string.length; i++) {
+      bytes.push(string.charCodeAt(i));
+    }
+    return bytes;
+  },
     
   uploadPackParserFor: function(binary) {
     var data   = new BinaryFile(binary);
     var offset = 0;
     var remoteLines = null;
+    var objects = null;
     var that = {};
     
     var peek = function(length) {
@@ -158,6 +60,10 @@ JsGit = {
         return remoteLines;
     };
     
+    that.getObjects = function() {
+        return objects;
+    };
+    
     that.parse = function() {
       var pktLine = nextPktLine();
       var safe = 0;
@@ -171,8 +77,14 @@ JsGit = {
             remoteLines.push(JsGit.bytesToString(pktLine));
           }
           else if (pktLine[0] == 1) {
-            packFileParser = JsGit.packFileParserFor(JsGit.bytesToString(pktLine.slice(1)));
-            packFileParser.parse();
+            console.log(pktLine.slice(1, 5));
+            console.log(JsGit.stringToBytes("PACK"));
+            console.log(pktLine.slice(1, 5) === JsGit.stringToBytes("PACK"));
+            if (pktLine.slice(1, 5).compare(JsGit.stringToBytes("PACK"))) {
+              packFileParser = JsGit.packFileParserFor(JsGit.bytesToString(pktLine.slice(1)));
+              packFileParser.parse();
+              objects = packFileParser.getObjects();
+            }
           }
           pktLine = nextPktLine();
           safe += 1;
@@ -188,13 +100,16 @@ JsGit = {
   
   packFileParserFor: function(binary) {
     var data = new BinaryFile(binary);
-    console.log(data.slice(0, 100));
     var offset = 0;
     var objects = [];
     var that = {};
     
     var peek = function(length) {
       return data.slice(offset, offset + length);
+    };
+    
+    var rest = function() {
+      return data.slice(offset);
     };
     
     var advance = function(length) {
@@ -225,22 +140,114 @@ JsGit = {
       return num;
     };
     
+    var objectSizeInfosToSize = function(sizeInfos) {
+      var current = 0,
+          currentShift = 0,
+          i,
+          sizeInfo;
+          
+      for (i = 0; i < sizeInfos.length; i++) {
+        sizeInfo = sizeInfos[i];
+        current += (parseInt(sizeInfo, 2) << currentShift);
+        currentShift += sizeInfo.length;
+      }
+      return current;
+    };
+    
+    var getType = function(typeStr) {
+      return {
+        "001":"commit",
+        "010":"tree",
+        "011":"blob",
+        "100":"tag",
+        "110":"ofs_delta",
+        "111":"ref_delta"
+        }[typeStr]
+    };
+    
     var matchObjectHeader = function() {
       var sizeInfos       = [];
-      console.log("header: " + peek(1)[0])
-      var hintTypeAndSize = peek(1)[0].toString(2);//.rjust(8, "0");
+      var hintTypeAndSize = peek(1)[0].toString(2).rjust(8, "0");
       var typeStr         = hintTypeAndSize.slice(1, 4);
       var needMore        = (hintTypeAndSize[0] == "1");
-      sizeInfos.push(hintTypeAndSize.slice(4, 8))
+      var hintAndSize     = null;
       
-      console.log([hintTypeAndSize, typeStr]);
+      sizeInfos.push(hintTypeAndSize.slice(4, 8))
       advance(1);
-    }
+
+      while (needMore) {
+        hintAndSize = peek(1)[0].toString(2).rjust(8, "0");
+        needMore    = (hintAndSize[0] == "1");
+        sizeInfos.push(hintAndSize.slice(1))
+        advance(1);
+      }
+      return {size:objectSizeInfosToSize(sizeInfos), type:getType(typeStr)}
+    };
+    
+    // zlib files contain a two byte header. (RFC 1950)
+    var stripZlibHeader = function(zlib) {
+      return zlib.slice(2);
+    };
+    
+    var adler32 = function(string) {
+      var s1 = 1,
+          s2 = 0,
+          i;
+      var bytes = JsGit.stringToBytes(string);
+      for(i = 0; i < bytes.length; i++) {
+        s1 = s1 + bytes[i];
+        s2 = s2 + s1;
+        s1 = s1 % 65521;
+        s2 = s2 % 65521;
+      }
+      return s2*65536 + s1;
+    };
+    
+    var intToBytes = function(val) {
+      var bytes = []; 
+      var current = val; 
+      while (current > 0) { 
+        bytes.push(current % 256);
+        current = Math.floor(current / 256); 
+      }
+      return bytes.reverse();
+    };
+    
+    var matchBytes = function(bytes) {
+      var i;
+      var nextByte;
+      for (i = 0; i < bytes.length; i++) {
+        nextByte = peek(1)[0];
+        if (nextByte !== bytes[i]) {
+          throw("adler32 checksum didn't match");
+        }
+        advance(1);
+      }
+    };
+    
+    var objectHash = function(type, content) {
+      return rstr2hex(rstr_sha1(type + " " + content.length + "\0" + content));
+    };
+    
+    var matchObjectData = function(header) {
+      var deflated = stripZlibHeader(rest());
+      var uncompressedData = RawDeflate.inflate(JsGit.bytesToString(deflated));
+      var checksum = adler32(uncompressedData);
+      var deflatedData = RawDeflate.deflate(uncompressedData);
+      console.log(uncompressedData);
+      advance(2 + JsGit.stringToBytes(deflatedData).length);
+      matchBytes(intToBytes(checksum));
+      return {
+        sha: objectHash(header.type, uncompressedData),
+        data: uncompressedData
+      };
+    };
     
     var matchObject = function() {
       var header = matchObjectHeader();
+      return matchObjectData(header);
     };
-    
+
     that.parse = function() {
       var numObjects;
       var i;
@@ -273,10 +280,12 @@ JsGit = {
       data: "0067want b60971573593e660dcef1e43a63a01890bfc667a multi_ack_detailed side-band-64k thin-pack ofs-delta\n00000009done\n",
       type: "POST",
       contentType: "application/x-git-upload-pack-request",
-      success: function(data) {
-        $('#response2').html(data);
-        var parser = JsGit.uploadPackParserFor(data);
+      success: function(data, textStatus, xhr) {
+        var binaryData = xhr.responseText;
+        $('#response2').html(binaryData);
+        var parser = JsGit.uploadPackParserFor(binaryData);
         parser.parse();
+        console.log(parser.getObjects());
         var i;
         for(i = 0; i < parser.getRemoteLines().length; i++ ) {
           $('#response2').append("<br />" + parser.getRemoteLines()[i]);
@@ -286,6 +295,9 @@ JsGit = {
         $('#response2').append(xhr.status).
         append("<br />").
         append(xhr.responseText);
+      },
+      beforeSend: function(xhr) {
+        xhr.overrideMimeType('text/plain; charset=x-user-defined');
       }
     });
   },

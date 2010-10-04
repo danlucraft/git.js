@@ -51,13 +51,13 @@ class PackParser
   def match_object
     header = match_object_header
     data = match_object_data(header)
+    p header
     {:data => data,
       :sha => Digest::SHA1.hexdigest("#{header[:type]} #{header[:size]}\0#{data}")}
   end
   
   def match_object_header
     hint_type_and_size = current[0].to_s(2)
-    p hint_type_and_size
     type               = nil
     size_infos         = []
     continue   =  (hint_type_and_size[0..0] == "1")
@@ -80,8 +80,15 @@ class PackParser
   def myzlib_match_object_data(header)
     back = inflate(header[:size], current, current.length)
     data, used = *back
+    p to_bytes(current[0..used])
     advance(used)
     data
+  end
+  
+  def to_bytes(string)
+    bytes = []
+    string.each_byte {|b| bytes << b}
+    bytes
   end
   
   def advance(bytes)
