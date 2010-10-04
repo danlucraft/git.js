@@ -77,9 +77,6 @@ JsGit = {
             remoteLines.push(JsGit.bytesToString(pktLine));
           }
           else if (pktLine[0] == 1) {
-            console.log(pktLine.slice(1, 5));
-            console.log(JsGit.stringToBytes("PACK"));
-            console.log(pktLine.slice(1, 5) === JsGit.stringToBytes("PACK"));
             if (pktLine.slice(1, 5).compare(JsGit.stringToBytes("PACK"))) {
               packFileParser = JsGit.packFileParserFor(JsGit.bytesToString(pktLine.slice(1)));
               packFileParser.parse();
@@ -234,7 +231,6 @@ JsGit = {
       var uncompressedData = RawDeflate.inflate(JsGit.bytesToString(deflated));
       var checksum = adler32(uncompressedData);
       var deflatedData = RawDeflate.deflate(uncompressedData);
-      console.log(uncompressedData);
       advance(2 + JsGit.stringToBytes(deflatedData).length);
       matchBytes(intToBytes(checksum));
       return {
@@ -255,7 +251,6 @@ JsGit = {
       matchPrefix();
       matchVersion(2);
       numObjects = matchNumberOfObjects();
-      console.log("expecting " + numObjects + " objects");
       
       for (i = 0; i < numObjects; i++) {
         objects.push(matchObject());
