@@ -28,11 +28,9 @@ class Rack::Proxy
     sub_request = Net::HTTP.const_get(method).new("#{uri.path}#{"?" if uri.query}#{uri.query}")
     if sub_request.request_body_permitted? and req.body
       body = req.body.read
-      p [:body, body]
       sub_request.body = body
       sub_request.content_length = req.content_length
       sub_request.content_type = req.content_type
-      p req.content_type
       if (req.content_type).include?("application/x-git-upload-pack-request")
         sub_request.content_type = "application/x-git-upload-pack-request"
       end
@@ -42,7 +40,6 @@ class Rack::Proxy
     sub_request["Accept-Encoding"] = req.accept_encoding
     sub_request["Referer"] = req.referer
     session = Net::HTTP.new(uri.host, uri.port)
-    p [:scheme, uri.scheme]
     if uri.scheme == "https"
       session.use_ssl = true
     end
@@ -55,8 +52,7 @@ class Rack::Proxy
       headers[k] = v unless k.to_s =~ /cookie|content-length|transfer-encoding/i
     end
     body = sub_response.read_body
-    p [:response, body]
-    File.open("result.bin", "w") {|fout| fout.print body }
+    #File.open("result.bin", "w") {|fout| fout.print body }
     [sub_response.code.to_i, headers, [body]]
   end
 end
@@ -70,7 +66,7 @@ use Rack::Proxy do |req|
     else
       uri = "https://github.com#{github_path}"
     end
-    puts "FETCH #{uri}"
+    puts "FETCH #{path} => #{uri}"
     URI.parse(uri)
   end
 end
