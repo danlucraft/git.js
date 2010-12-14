@@ -1,5 +1,5 @@
 
-require "net/http"
+require "net/https"
 
 # Example Usage:
 #
@@ -36,14 +36,17 @@ class Rack::Proxy
       if (req.content_type).include?("application/x-git-upload-pack-request")
         sub_request.content_type = "application/x-git-upload-pack-request"
       end
-      
     end
 
     sub_request["X-Forwarded-For"] = (req.env["X-Forwarded-For"].to_s.split(/, +/) + [req.env['REMOTE_ADDR']]).join(", ")
     sub_request["Accept-Encoding"] = req.accept_encoding
     sub_request["Referer"] = req.referer
-    
-    sub_response = Net::HTTP.start(uri.host, uri.port) do |http|
+    session = Net::HTTP.new(uri.host, uri.port)
+    p [:scheme, uri.scheme]
+    if uri.scheme == "https"
+      session.use_ssl = true
+    end
+    sub_response = session.start do |http|
       http.request(sub_request)
     end
 
@@ -52,6 +55,7 @@ class Rack::Proxy
       headers[k] = v unless k.to_s =~ /cookie|content-length|transfer-encoding/i
     end
     body = sub_response.read_body
+    p [:response, body]
     File.open("result.bin", "w") {|fout| fout.print body }
     [sub_response.code.to_i, headers, [body]]
   end
@@ -62,9 +66,9 @@ use Rack::Proxy do |req|
   if path =~ /^\/github/
     github_path = path.gsub(/^\/github/, "")
     if query = req.query_string and query != ""
-      uri = "http://github.com#{github_path}?#{query}"
+      uri = "https://github.com#{github_path}?#{query}"
     else
-      uri = "http://github.com#{github_path}"
+      uri = "https://github.com#{github_path}"
     end
     puts "FETCH #{uri}"
     URI.parse(uri)
@@ -72,5 +76,5 @@ use Rack::Proxy do |req|
 end
 
 run proc { |env| 
-  [200, {"Content-Type" => "text/html"}, [File.read(File.dirname(__FILE__) + "/../jsgit" + env["REQUEST_URI"])]]
+  [200, {"Content-Type" => "text/html"}, [File.read(File.dirname(__FILE__) + env["REQUEST_URI"])]]
 }

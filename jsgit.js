@@ -1,13 +1,3 @@
-Array.prototype.compare = function(testArr) {
-    if (this.length != testArr.length) return false;
-    for (var i = 0; i < testArr.length; i++) {
-        if (this[i].compare) { 
-            if (!this[i].compare(testArr[i])) return false;
-        }
-        if (this[i] !== testArr[i]) return false;
-    }
-    return true;
-}
 
 JsGit = {
   
@@ -277,13 +267,16 @@ JsGit = {
       contentType: "application/x-git-upload-pack-request",
       success: function(data, textStatus, xhr) {
         var binaryData = xhr.responseText;
-        $('#response2').html(binaryData);
+        //$('#response2').html(binaryData);
         var parser = JsGit.uploadPackParserFor(binaryData);
         parser.parse();
-        console.log(parser.getObjects());
         var i;
         for(i = 0; i < parser.getRemoteLines().length; i++ ) {
           $('#response2').append("<br />" + parser.getRemoteLines()[i]);
+        }
+        var objects = parser.getObjects();
+        for (i = 0; i < objects.length; i++) {
+          $("#objects").append("<li>" + objects[i].sha + "<br /><pre>" + objects[i].data + "</pre></li>")
         }
       },
       error: function(xhr, data, e) {
