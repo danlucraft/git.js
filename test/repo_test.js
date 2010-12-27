@@ -11,6 +11,26 @@ exports.Repo = {
     test.equal(_(repo.getRefs()).keys().length, 0)
     test.equal(_(repo.getRemotes()).keys().length, 0)
     test.done()
+  },
+  
+  testAddRef: function(test) {
+    var repo = new JsGit.Repo()
+    test.deepEqual(repo.getRefs(), {})
+    
+    repo.addRef("master", "yurrffff")
+    test.equals(_(repo.getRefs()).keys().length, 1)
+    test.deepEqual(repo.getRefs()["master"], {name: "master", sha: "yurrffff"})
+    test.done()
+  },
+  
+  testAddRemote: function(test) {
+    var repo = new JsGit.Repo()
+    test.deepEqual(repo.getRemotes(), {})
+    
+    repo.addRemote("origin", "http://www.yahoo.com/")
+    test.equals(_(repo.getRemotes()).keys().length, 1)
+    test.deepEqual(repo.getRemotes()["origin"].url, "http://www.yahoo.com/")
+    test.done()
   }
 }
 
@@ -33,13 +53,4 @@ exports.GithubProxyRepo = {
     test.done()
   },
   
-  testAddRef: function(test) {
-    var repo = createTestRepo()
-    test.deepEqual(repo.getRefs(), {})
-    
-    repo.addRef("master", "yurrffff")
-    test.equals(_(repo.getRefs()).keys().length, 1)
-    test.deepEqual(repo.getRefs()["master"], {name: "master", sha: "yurrffff"})
-    test.done()
-  }
 }
