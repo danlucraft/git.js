@@ -6,7 +6,7 @@ exports.Blob = {
     var blob = new JsGit.objects.Blob("sha123", "// An example JavaScript file")
     test.equals(blob.sha, "sha123")
     test.equals(blob.type, "blob")
-    test.equals(blob.content, "// An example JavaScript file")
+    test.equals(blob.data, "// An example JavaScript file")
     test.done()
   }
 }
@@ -19,7 +19,7 @@ exports.Commit = {
     
     test.equals(commit.sha, "sha123")
     test.equals(commit.type, "commit")
-    test.equals(commit.content, JsGit.bytesToString(testCommitData))
+    test.equals(commit.data, JsGit.bytesToString(testCommitData))
     test.done()
   },
   
@@ -42,7 +42,25 @@ exports.Tree = {
     var tree = new JsGit.objects.Tree("sha123", JsGit.bytesToString(testTreeData))
     test.equals(tree.sha, "sha123")
     test.equals(tree.type, "tree")
-    test.equals(tree.content, JsGit.bytesToString(testTreeData))
+    test.equals(tree.data, JsGit.bytesToString(testTreeData))
+    test.done()
+  },
+  
+  "has contents": function(test) {
+    var tree = new JsGit.objects.Tree("sha123", JsGit.bytesToString(testTreeData))
+    test.deepEqual(tree.contents, 
+      [
+        {
+          mode: "100644",
+          name: "README",
+          sha: "fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7"
+        },
+        {
+          mode: "040000",
+          name: "lib",
+          sha: "ae511596e38ed675db0603a1344e4eea2f194634"
+        }
+      ])
     test.done()
   }
 }
