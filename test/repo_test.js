@@ -1,8 +1,17 @@
 require('../lib/jsgit-server')
 
-exports['new Repo'] = function(test) {
-  var repo = new JsGit.Repo()
-  test.done()
+exports.Repo = { 
+  testCreate: function(test) {
+    var repo = new JsGit.Repo()
+    test.done()
+  },
+  
+  testEmpty: function(test) {
+    var repo = new JsGit.Repo()
+    test.equal(_(repo.getRefs()).keys().length, 0)
+    test.equal(_(repo.getRemotes()).keys().length, 0)
+    test.done()
+  }
 }
 
 var createTestRepo = function() {
@@ -10,21 +19,25 @@ var createTestRepo = function() {
 }
   
 exports.GithubProxyRepo = {
-  testCreateRepo: function(test) {
+  testCreate: function(test) {
     var repo = createTestRepo()
     test.ok(repo)
-    test.equals(repo.getUrl(), "http://localhost:3000/github/danlucraft:foopw/clojure-dojo.git")
+    test.done()
+  },
+  
+  testHasRemote: function(test) {
+    var repo = createTestRepo()
+    test.deepEqual(repo.getRemotes()["github"], {name: "github", url: "http://localhost:3000/github/danlucraft:foopw/clojure-dojo.git"})
     test.done()
   },
   
   testAddRef: function(test) {
     var repo = createTestRepo()
-    test.equals(repo.getRefs().length, 0)
+    test.deepEqual(repo.getRefs(), {})
     
     repo.addRef("master", "yurrffff")
-    
-    test.equals(repo.getRefs().length, 1)
-    test.deepEqual(repo.getRefs()[0], {name: "master", sha: "yurrffff"})
+    test.equals(_(repo.getRefs()).keys().length, 1)
+    test.deepEqual(repo.getRefs()["master"], {name: "master", sha: "yurrffff"})
     test.done()
   }
 }
