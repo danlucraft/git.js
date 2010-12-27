@@ -259,9 +259,9 @@ JsGit = {
     return val % 2 === 0;
   },
   
-  makePost: function () {
+  makePost: function(username, repo, password) {
     $.ajax({
-      url: 'http://localhost:3000/github/danlucraft/clojure-dojo.git/git-upload-pack',
+      url: 'http://localhost:3000/github/' + username + ":" + password + "/" + repo + '.git/git-upload-pack',
       data: "0067want b60971573593e660dcef1e43a63a01890bfc667a multi_ack_detailed side-band-64k thin-pack ofs-delta\n00000009done\n",
       type: "POST",
       contentType: "application/x-git-upload-pack-request",
@@ -330,9 +330,9 @@ JsGit = {
     return result;
   },
   
-  discovery: function(user, repo) {
+  discovery: function(username, repo, password) {
     $.get(
-      'http://localhost:3000/github/' + user + "/" + repo + '.git/info/refs?service=git-upload-pack',
+      'http://localhost:3000/github/' + username + ":" + password + "/" + repo + '.git/info/refs?service=git-upload-pack',
       "",
       function(data) {
         var discInfo = JsGit.parseDiscovery(data);
@@ -342,12 +342,12 @@ JsGit = {
           $("#refs").append("<li>" + ref["name"] + ":" + ref["sha"] + "</li>");
         }
         $('#response').html(data);
-        JsGit.makePost()
+        JsGit.makePost(username, repo, password)
       }
     );
   },
   
-  demo: function() {
-    this.discovery("danlucraft", "clojure-dojo");
+  demo: function(username, repo, password) {
+    this.discovery(username, repo, encodeURI(password));
   }
 }
