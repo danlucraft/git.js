@@ -9,7 +9,7 @@ JsGitTestData = {
 }
 
 exports['parseDiscovery'] = function(test) {
-  test.deepEqual(JsGit.parseDiscovery(JsGitTestData.discovery), {
+  test.deepEqual(JsGit.Remote.parseDiscovery(JsGitTestData.discovery), {
     "capabilities":"multi_ack thin-pack side-band side-band-64k ofs-delta shallow no-progress include-tag multi_ack_detailed",
     "refs":[
         {"name":"HEAD", "sha":"b3453be87b70a0c5dea28aacd49cf34ddb91a8c5"},

@@ -27,7 +27,9 @@ exports.GithubProxyRepo = {
   
   testHasRemote: function(test) {
     var repo = createTestRepo()
-    test.deepEqual(repo.getRemotes()["origin"].url, "http://localhost:3000/github/danlucraft:foopw/clojure-dojo.git")
+    var remote = repo.getRemotes()["origin"]
+    test.equals(remote.url, "http://localhost:3000/github/danlucraft:foopw/clojure-dojo.git")
+    test.equals(remote.repo, repo)
     test.done()
   },
   

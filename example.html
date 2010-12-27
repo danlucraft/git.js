@@ -23,12 +23,12 @@
 <script type="text/javascript" src="lib/jsgit-client.js"></script>
 <script type="text/javascript">
 $(document).ready(function() {
-  $("form#repo").submit(function() {
+  $("form#repo").submit(function(e) {
+    e.preventDefault()
     var username = $("input#username").attr("value"),
         password = $("input#password").attr("value"),
         repo = $("input#repo").attr("value")
     JsGit.demo(username, repo, password)
-    return false
   })
 })
 </script>
