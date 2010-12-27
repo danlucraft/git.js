@@ -1,34 +1,41 @@
   
-<h1>hi</h1>
-<form id="repo">
-  username: <input type="text" id="username" value="danlucraft"><br>
-  password: <input type="password" id="password"><br>
-  repo:     <input type="text" id="repo" value="clojure-dojo"><br>
-  <input type="submit" text="Clone" id="clone-button">
-</form>
-  
-<div id="main">
-  <ul id="refs">
-  </ul>
-  <pre id="response">
-  </pre>
-  <pre id="response2">
-  </pre>
-  
-  <ul id="objects">
-  </ul>
-</div>
+<h1>Git.JS</h1>
 
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-<script type="text/javascript" src="lib/jsgit-client.js"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-  $("form#repo").submit(function(e) {
-    e.preventDefault()
-    var username = $("input#username").attr("value"),
-        password = $("input#password").attr("value"),
-        repo = $("input#repo").attr("value")
-    JsGit.demo(username, repo, password)
+<table>
+  <tr>
+    <td style="vertical-align: top;">
+      <form id="repo">
+        username: <input type="text" id="username" value="danlucraft"><br>
+        password: <input type="password" id="password"><br>
+        repo:     <input type="text" id="repo" value="test-repo1"><br>
+        <input type="submit" text="Clone" id="clone-button">
+      </form>
+    </td>
+    <td>
+      <div id="main">
+        <ul id="refs">
+        </ul>
+        <pre id="response">
+        </pre>
+        <pre id="response2">
+        </pre>
+        
+        <ul id="objects">
+        </ul>
+      </div>
+    </td>
+  </tr>
+</table>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+  <script type="text/javascript" src="lib/jsgit-client.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $("form#repo").submit(function(e) {
+      e.preventDefault()
+      var username = $("input#username").attr("value"),
+          password = $("input#password").attr("value"),
+          repo = $("input#repo").attr("value")
+      JsGit.demo(username, repo, password)
+    })
   })
-})
 </script>
