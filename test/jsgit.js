@@ -26,7 +26,7 @@ exports['parseDiscovery'] = function(test) {
 }
 
 exports['parsePack'] = function(test) {
-  test.deepEqual(JsGit.packFileParserFor(JsGitTestData.pack).parse().getObjects(),
+  test.deepEqual(new JsGit.PackFileParser(JsGitTestData.pack).parse().getObjects(),
 [ { sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
   , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
   }
@@ -47,7 +47,7 @@ exports['parsePack'] = function(test) {
 }
 
 exports['parseUploadPack'] = function(test) {
-  var uploadPackParser = JsGit.uploadPackParserFor(JsGitTestData.upload_pack)
+  var uploadPackParser = new JsGit.UploadPackParser(JsGitTestData.upload_pack)
   uploadPackParser.parse()
   test.deepEqual(uploadPackParser.getRemoteLines(), 
                 ['Counting objects: 5, done.', 'Compressing objects: 100% (3/3), done.', 'Total 5 (delta 0), reused 0 (delta 0)'])
