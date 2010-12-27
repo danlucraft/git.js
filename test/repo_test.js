@@ -28,8 +28,21 @@ exports.Repo = {
     test.deepEqual(repo.getRemotes(), {})
     
     repo.addRemote("origin", "http://www.yahoo.com/")
+    
     test.equals(_(repo.getRemotes()).keys().length, 1)
     test.deepEqual(repo.getRemotes()["origin"].url, "http://www.yahoo.com/")
+    test.done()
+  },
+  
+  testAddObject: function(test) {
+    var repo = new JsGit.Repo()
+    test.deepEqual(repo.objectCount(), 0)
+    
+    repo.addObject("asdfasdf", "blob", "Hello World!")
+    
+    test.equals(repo.objectCount(), 1)
+    test.deepEqual(repo.getObject("asdfasdf").type, "blob")
+    test.deepEqual(repo.getObject("asdfasdf").content, "Hello World!")
     test.done()
   }
 }

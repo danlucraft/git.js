@@ -21,22 +21,27 @@ exports['parseDiscovery'] = function(test) {
 
 exports['PackFileParser'] = function(test) {
   test.deepEqual(new JsGit.PackFileParser(JsGitTestData.pack).parse().getObjects(),
-[ { sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
-  , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
+  [ { sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
+    , type: "commit"
+    , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
   }
-, { sha: 'c44942a959a822a3a785ed7c4a658db9690dd175'
-  , data: '100644 README\u0000\u00fd*\u001d\u0088\u00b0\r\u0084\u0001\u00c0\u0090\177\u00c3\u00e2\u00d3\u00e2_\u0001\u00bbR\u00e740000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
+  , { sha: 'c44942a959a822a3a785ed7c4a658db9690dd175'
+    , type: "tree"
+    , data: '100644 README\u0000\u00fd*\u001d\u0088\u00b0\r\u0084\u0001\u00c0\u0090\177\u00c3\u00e2\u00d3\u00e2_\u0001\u00bbR\u00e740000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
   }
-, { sha: 'fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7'
-  , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n'
+  , { sha: 'fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7'
+    , type: "blob"
+    , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n'
   }
-, { sha: 'ae511596e38ed675db0603a1344e4eea2f194634'
-  , data: '100644 foo.js\u0000\u00e5\u00aa\u00af\u00b7w\u0015Y\u00d9\u00db-\u00d8\u001fR\\\u00e70\u008bwq\u0010'
+  , { sha: 'ae511596e38ed675db0603a1344e4eea2f194634'
+    , type: "tree"
+    , data: '100644 foo.js\u0000\u00e5\u00aa\u00af\u00b7w\u0015Y\u00d9\u00db-\u00d8\u001fR\\\u00e70\u008bwq\u0010'
   }
-, { sha: 'e5aaafb7771559d9db2dd81f525ce7308b777110'
-  , data: '// An example JavaScript file\n'
+  , { sha: 'e5aaafb7771559d9db2dd81f525ce7308b777110'
+    ,  type: "blob"
+    , data: '// An example JavaScript file\n'
   }
-])
+  ])
   test.done()
 }
 
