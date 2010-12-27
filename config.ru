@@ -59,6 +59,7 @@ class GithubForwarder
       end
       body = sub_response.read_body
       p body
+      File.open("response_body.bin", "w") {|fout| fout.print body}
       [sub_response.code.to_i, headers, [body]]
     else
       @app.call(env)
