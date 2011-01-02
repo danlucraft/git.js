@@ -26,16 +26,19 @@
     </td>
   </tr>
 </table>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  <script type="text/javascript" src="lib/jsgit-client.js"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $("form#repo").submit(function(e) {
-      e.preventDefault()
-      var username = $("input#username").attr("value"),
-          password = $("input#password").attr("value"),
-          repo = $("input#repo").attr("value")
-      JsGit.demo(username, repo, password)
-    })
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="../../lib/jsgit-client.js"></script>
+<script type="text/javascript" src="repo-viewer.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function() {
+  $("form#repo").submit(function(e) {
+    e.preventDefault()
+    var username = $("input#username").attr("value"),
+        password = $("input#password").attr("value"),
+        repo = $("input#repo").attr("value")
+    RepoViewer.demo(username, repo, password)
   })
+})
 </script>
+
