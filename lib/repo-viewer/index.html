@@ -19,16 +19,18 @@
             repo:     <input type="text" id="reponame" value="test-repo1"><br>
             <input type="submit" text="Clone" id="clone-button">
           </form>
+          <br>
+          <form id="refs">
+            <select name="refs" id="refs-list">
+            </select>
+          </form>
+          <br>
+          <div id="remote-lines">
+            
+          </div>
         </td>
         <td>
           <div id="main">
-            <ul id="refs">
-            </ul>
-            <pre id="response">
-            </pre>
-            <pre id="response2">
-            </pre>
-            
             <ul id="objects">
             </ul>
           </div>
@@ -40,9 +42,19 @@
         $("form#repo").submit(function(e) {
           e.preventDefault()
           var username = $("input#username").attr("value"),
-          password = $("input#password").attr("value"),
-          repo = $("input#reponame").attr("value")
-          RepoViewer.demo(username, repo, password)
+              password = $("input#password").attr("value"),
+              reponame = $("input#reponame").attr("value")
+          RepoViewer.demo(username, reponame, password)
+        })
+        
+        $("select#refs-list").change(function(e) {
+          e.preventDefault()
+          var refToFetch = $("select#refs-list").val()
+          var origin = RepoViewer.repo.getRemotes()["origin"]
+          origin.fetchRef(RepoViewer.repo.getRefs()[refToFetch], function(remoteLines) {
+            RepoViewer.displayRemoteLines(remoteLines)
+            RepoViewer.displayObjects(RepoViewer.repo)
+          })
         })
       })
     </script>
