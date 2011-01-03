@@ -8,29 +8,29 @@ exports.Repo = {
   
   testEmpty: function(test) {
     var repo = new JsGit.Repo()
-    test.equal(_(repo.getRefs()).keys().length, 0)
-    test.equal(_(repo.getRemotes()).keys().length, 0)
+    test.equal(repo.getRefs().length, 0)
+    test.equal(repo.getRemotes().length, 0)
     test.done()
   },
   
   testAddRef: function(test) {
     var repo = new JsGit.Repo()
-    test.deepEqual(repo.getRefs(), {})
+    test.deepEqual(repo.getRefs(), [])
     
     repo.addRef("master", "yurrffff")
-    test.equals(_(repo.getRefs()).keys().length, 1)
-    test.deepEqual(repo.getRefs()["master"], {name: "master", sha: "yurrffff"})
+    test.equals(repo.getRefs().length, 1)
+    test.deepEqual(repo.getRef("master"), {name: "master", sha: "yurrffff", remote: null})
     test.done()
   },
   
   testAddRemote: function(test) {
     var repo = new JsGit.Repo()
-    test.deepEqual(repo.getRemotes(), {})
+    test.deepEqual(repo.getRemotes(), [])
     
     repo.addRemote("origin", "http://www.yahoo.com/")
     
-    test.equals(_(repo.getRemotes()).keys().length, 1)
-    test.deepEqual(repo.getRemotes()["origin"].url, "http://www.yahoo.com/")
+    test.equals(repo.getRemotes().length, 1)
+    test.deepEqual(repo.getRemote("origin").url, "http://www.yahoo.com/")
     test.done()
   },
   
@@ -60,7 +60,7 @@ exports.GithubProxyRepo = {
   
   testHasRemote: function(test) {
     var repo = createTestRepo()
-    var remote = repo.getRemotes()["origin"]
+    var remote = repo.getRemote("origin")
     test.equals(remote.url, "http://localhost:3000/github/danlucraft:foopw/clojure-dojo.git")
     test.equals(remote.repo, repo)
     test.done()

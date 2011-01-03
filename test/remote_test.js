@@ -7,7 +7,7 @@ var createTestRepo = function() {
 exports.Remote = {
   testGetRemote: function(test) {
     var repo = createTestRepo();
-    var remote = repo.getRemotes()["origin"]
+    var remote = repo.getRemote("origin")
     test.equals(remote.name, "origin")
     test.ok(remote.url)
     test.done()
