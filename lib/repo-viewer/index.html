@@ -26,9 +26,11 @@
             </select>
           </form>
           <br>
-          <div id="remote-lines">
+          <pre id="remote-lines">
             
-          </div>
+          </pre>
+          <ul id="top-directory">
+          </ul>
         </td>
         <td>
           <div id="main">
@@ -51,14 +53,8 @@
         
         $("select#refs-list").change(function(e) {
           e.preventDefault()
-          var refToFetch = $("select#refs-list").val()
-          var origin = RepoViewer.repo.getRemote("origin")
-          console.log(origin)
-          console.log(origin.getRef(refToFetch))
-          origin.fetchRef(origin.getRef(refToFetch), function(remoteLines, newObjects) {
-            RepoViewer.displayRemoteLines(remoteLines)
-            RepoViewer.displayObjects(newObjects)
-          })
+          var refName = $("select#refs-list").val()
+          RepoViewer.showRef(refName)
         })
       })
     </script>
