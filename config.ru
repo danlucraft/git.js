@@ -70,5 +70,11 @@ end
 use GithubForwarder
 
 run proc { |env| 
-  [200, {"Content-Type" => "text/html"}, [File.read(File.dirname(__FILE__) + env["REQUEST_URI"])]]
+  if env["REQUEST_URI"].split(".").last == "js"
+    content_type = "text/javascript"
+  else
+    content_type = "text/html"
+  end
+    
+  [200, {"Content-Type" => content_type}, [File.read(File.dirname(__FILE__) + env["REQUEST_URI"])]]
 }
