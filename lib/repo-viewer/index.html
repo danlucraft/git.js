@@ -53,9 +53,9 @@
           e.preventDefault()
           var refToFetch = $("select#refs-list").val()
           var origin = RepoViewer.repo.getRemotes()["origin"]
-          origin.fetchRef(RepoViewer.repo.getRefs()[refToFetch], function(remoteLines) {
+          origin.fetchRef(RepoViewer.repo.getRefs()[refToFetch], function(remoteLines, newObjects) {
             RepoViewer.displayRemoteLines(remoteLines)
-            RepoViewer.displayObjects(RepoViewer.repo)
+            RepoViewer.displayObjects(newObjects)
           })
         })
       })
