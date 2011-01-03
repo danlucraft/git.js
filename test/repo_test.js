@@ -17,9 +17,9 @@ exports.Repo = {
     var repo = new JsGit.Repo()
     test.deepEqual(repo.getRefs(), [])
     
-    repo.addRef("master", "yurrffff")
+    repo.addRef("refs/heads/master", "yurrffff")
     test.equals(repo.getRefs().length, 1)
-    test.deepEqual(repo.getRef("master"), {name: "master", sha: "yurrffff", remote: null})
+    test.deepEqual(repo.getRef("master"), {name: "master", sha: "yurrffff", remote: null, type:"heads"})
     test.done()
   },
   
