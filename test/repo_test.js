@@ -44,6 +44,15 @@ exports.Repo = {
     test.deepEqual(repo.getObject("asdfasdf").type, "blob")
     test.deepEqual(repo.getObject("asdfasdf").data, "Hello World!")
     test.done()
+  },
+  
+  objectify: function(test) {
+    var repo = new JsGit.Repo()
+    repo.addObject("abc123", "blob", "Hello World!")
+    var object = repo.getObject("abc123")
+    test.equals(repo.objectify("abc123"), object)
+    test.equals(repo.objectify(object), object)
+    test.done()
   }
 }
 
