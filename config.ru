@@ -1,4 +1,4 @@
-
+require 'pp'
 require "net/https"
 
 class GithubForwarder
@@ -9,23 +9,28 @@ class GithubForwarder
   def call(env)
     puts
     path = env["REQUEST_PATH"]
-    puts "original path: #{path}"
-    if path =~ /^\/github/
-      new_path = path.gsub(/^\/github/, "")
-      
+    query_string = env["QUERY_STRING"]
+    puts "from: #{env["REQUEST_URI"]}"
+    if query_string =~ /server=https:\/\/github.com/
       req = Rack::Request.new(env)
       method = req.request_method.downcase
       method[0..0] = method[0..0].upcase
       
-      credentials = new_path.split("/")[1]
-      username, password = *credentials.split(":").map {|bit| URI.decode(bit)}
-      puts "credentials : #{username}, #{password}"
+      params = {}
+      query_string.split("&").each do |pair_string|
+        pair = pair_string.split("=")
+        params[pair[0]] = URI.decode(pair[1])
+      end
+      username = params.delete("username")
+      password = params.delete("password")
+      server = params.delete("server")
       
-      new_path = "/#{username}/" + new_path.split("/")[2..-1].join("/")
-      puts "new path    : #{new_path}"
-      new_uri = "https://github.com#{new_path}"
-      new_uri += "?#{env["QUERY_STRING"]}" unless env["QUERY_STRING"].to_s == ""
-      p new_uri
+      new_uri = "#{server}#{path}"
+      params.each do |key, value|
+        new_uri += "?" unless new_uri =~ /(\?|&)$/
+        new_uri += key + "=" + URI.encode(value)
+      end
+      puts "forwarding to: #{new_uri}"
       new_uri = URI.parse(new_uri)
       
       sub_request = Net::HTTP.const_get(method).new("#{new_uri.path}#{"?" if new_uri.query}#{new_uri.query}")
@@ -43,7 +48,6 @@ class GithubForwarder
       sub_request["X-Forwarded-For"] = (req.env["X-Forwarded-For"].to_s.split(/, +/) + [req.env['REMOTE_ADDR']]).join(", ")
       sub_request["Accept-Encoding"] = req.accept_encoding
       sub_request["Referer"] = req.referer
-      p [new_uri.host, new_uri.port]
       session = Net::HTTP.new(new_uri.host, new_uri.port)
       if new_uri.scheme == "https"
         session.use_ssl = true
@@ -60,6 +64,7 @@ class GithubForwarder
       body = sub_response.read_body
       p body
       File.open("response_body.bin", "w") {|fout| fout.print body}
+      puts "done"
       [sub_response.code.to_i, headers, [body]]
     else
       @app.call(env)
