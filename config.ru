@@ -19,7 +19,7 @@ class GithubForwarder
       params = {}
       query_string.split("&").each do |pair_string|
         pair = pair_string.split("=")
-        params[pair[0]] = URI.decode(pair[1])
+        params[pair[0]] = pair[1] ? URI.decode(pair[1]) : ""
       end
       username = params.delete("username")
       password = params.delete("password")
@@ -52,7 +52,7 @@ class GithubForwarder
       if new_uri.scheme == "https"
         session.use_ssl = true
       end
-      sub_request.basic_auth(username, password)
+      # sub_request.basic_auth(username, password)
       sub_response = session.start do |http|
         http.request(sub_request)
       end
@@ -67,6 +67,7 @@ class GithubForwarder
       puts "done"
       [sub_response.code.to_i, headers, [body]]
     else
+      pp env
       @app.call(env)
     end
   end

@@ -59,7 +59,7 @@ exports.Repo = {
 var createTestRepo = function() {
   return new JsGit.GithubProxyRepo("danlucraft", "clojure-dojo", "foopw") 
 }
-  
+
 exports.GithubProxyRepo = {
   testCreate: function(test) {
     var repo = createTestRepo()
