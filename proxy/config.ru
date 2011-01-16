@@ -76,8 +76,12 @@ end
 use GithubForwarder
 
 run proc { |env| 
-  if env["REQUEST_URI"].split(".").last == "js"
+  ext = env["REQUEST_URI"].split(".").last
+  case ext
+  when "js"
     content_type = "text/javascript"
+  when "css"
+    content_type = "text/css"
   else
     content_type = "text/html"
   end

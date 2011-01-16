@@ -6,38 +6,53 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script src="../../lib/jsgit-client.js"></script>
     <script src="repo-viewer.js"></script>
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
   </head>
   <body>
-    <h1>Git.JS</h1>
-    
-    <table>
+    <table class="controls">
       <tr>
-        <td style="vertical-align: top;">
-          <h2>Github</h2>
-          <form id="github-repo">
-            username: <input type="text" id="username" value="danlucraft"><br>
-            password: <input type="password" id="password"><br>
-            repo:     <input type="text" id="reponame" value="test-repo1"><br>
-            <input type="submit" value="Clone">
-          </form>
-          <br>
-          <h2>Arbitrary</h2>
+        <td>
+          <h3 class="main-title">Git.JS</h3>
+        </td>
+        <td>
           <form id="arbitrary-repo">
-            uri: <input type="text" class="arbitrary-uri" value="http://localhost:8080/mega_mutex.git" size="50"><br>
+            <input type="text" class="arbitrary-uri" value="http://localhost:8080/mega_mutex.git" size="50">
             <input type="submit" value="Clone" id="">
           </form>
-          <br>
           <form id="refs">
             <select name="refs" id="refs-list">
               <option value=""></option>
             </select>
           </form>
+        </td>
+        <td>
           <br>
+        </td>
+      </tr>
+    </table>
+    <table>
+      <tr>
+        <td style="vertical-align: top;">
+          <ul id="top-directory">
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+          </ul>
           <pre id="remote-lines">
             
           </pre>
-          <ul id="top-directory">
-          </ul>
         </td>
         <td>
           <div id="main">
