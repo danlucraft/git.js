@@ -12,3 +12,9 @@
   width: 800px;
 height: 600px;
 }
+
+#top-directory {
+  overflow: scroll;
+  width: 250px;
+height: 600px;
+}
