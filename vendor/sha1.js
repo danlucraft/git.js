@@ -260,7 +260,12 @@ Sha1 = {
     var c = -1732584194;
     var d =  271733878;
     var e = -1009589776;
-  
+    
+    var bit_rol = Sha1.bit_rol
+    var safe_add = Sha1.safe_add
+    var sha1_ft = Sha1.sha1_ft
+    var sha1_kt = Sha1.sha1_kt
+    
     for(var i = 0; i < x.length; i += 16)
     {
       var olda = a;
@@ -272,21 +277,21 @@ Sha1 = {
       for(var j = 0; j < 80; j++)
       {
         if(j < 16) w[j] = x[i + j];
-        else w[j] = Sha1.bit_rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
-        var t = Sha1.safe_add(Sha1.safe_add(Sha1.bit_rol(a, 5), Sha1.sha1_ft(j, b, c, d)),
-                              Sha1.safe_add(Sha1.safe_add(e, w[j]), Sha1.sha1_kt(j)));
+        else w[j] = bit_rol(w[j-3] ^ w[j-8] ^ w[j-14] ^ w[j-16], 1);
+        var t = safe_add(safe_add(bit_rol(a, 5), sha1_ft(j, b, c, d)),
+                         safe_add(safe_add(e, w[j]), sha1_kt(j)));
         e = d;
         d = c;
-        c = Sha1.bit_rol(b, 30);
+        c = bit_rol(b, 30);
         b = a;
         a = t;
       }
   
-      a = Sha1.safe_add(a, olda);
-      b = Sha1.safe_add(b, oldb);
-      c = Sha1.safe_add(c, oldc);
-      d = Sha1.safe_add(d, oldd);
-      e = Sha1.safe_add(e, olde);
+      a = safe_add(a, olda);
+      b = safe_add(b, oldb);
+      c = safe_add(c, oldc);
+      d = safe_add(d, oldd);
+      e = safe_add(e, olde);
     }
     return Array(a, b, c, d, e);
   
