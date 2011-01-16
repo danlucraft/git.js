@@ -736,27 +736,11 @@ var zip_inflate = function(str) {
 
     var buff = new Array(1024);
     var aout = [];
-    // var maxIterations = 100;
-    // var iteration = 0;
     while((i = zip_inflate_internal(buff, 0, buff.length)) > 0) {
-        // iteration++;
-        // if (iteration > maxIterations) {
-        //   console.log("exceed max iterations for inflate, bailing out");
-        //   zip_inflate_data = null; // G.C.
-        //   return aout.join("");
-        // }
-        // console.log("buf length: " + i)
         var cbuf = new Array(i);
         for(j = 0; j < i; j++) {
           cbuf[j] = String.fromCharCode(buff[j]);
         }
-        // if (i != 0) {
-        //   console.log(cbuf.join(""));
-        // } else {
-        //     zip_inflate_data = null; // G.C.
-        //     return aout.join("");
-        // }
-        console.log("zip_inflate_pos: " + zip_inflate_pos)
         aout[aout.length] = cbuf.join("");
     }
     zip_inflate_data = null; // G.C.
