@@ -65,14 +65,6 @@
     
     <script type="text/javascript">
       $(document).ready(function() {
-        $("form#github-repo").submit(function(e) {
-          e.preventDefault()
-          var username = $("input#username").attr("value"),
-              password = $("input#password").attr("value"),
-              reponame = $("input#reponame").attr("value")
-          RepoViewer.githubDemo(username, reponame, password)
-        })
-        
         $("form#arbitrary-repo").submit(function(e) {
           e.preventDefault()
           var uri = $("input.arbitrary-uri").attr("value")

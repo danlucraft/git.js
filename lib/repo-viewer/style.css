@@ -6,3 +6,9 @@
 .main-title {
   color: red;
 }
+
+#file-view {
+  overflow: scroll;
+  width: 800px;
+height: 600px;
+}
