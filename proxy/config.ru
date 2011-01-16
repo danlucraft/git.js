@@ -82,5 +82,5 @@ run proc { |env|
     content_type = "text/html"
   end
     
-  [200, {"Content-Type" => content_type}, [File.read(File.dirname(__FILE__) + env["REQUEST_URI"])]]
+  [200, {"Content-Type" => content_type}, [File.read(File.dirname(__FILE__) + "/../" + env["REQUEST_URI"])]]
 }
