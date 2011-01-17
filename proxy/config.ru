@@ -67,7 +67,6 @@ class GithubForwarder
       puts "done"
       [sub_response.code.to_i, headers, [body]]
     else
-      pp env
       @app.call(env)
     end
   end
@@ -75,7 +74,24 @@ end
 
 use GithubForwarder
 
-run proc { |env| 
+def concat_js
+  load_file = File.read(File.dirname(__FILE__) + "/../lib/jsgit-client.js")
+  paths = load_file.scan(/getScript\("\/([^"]*)"\)/)
+  p paths
+  js = []
+  paths.each do |path|
+    js << File.read(File.dirname(__FILE__) + "/../" + path.first)
+  end
+  [200, {"Content-Type" => "text/javascript"}, js.join("\n\n")]
+end
+
+run proc { |env|
+  if env["REQUEST_URI"] == "/favicon.ico"
+    return [404, {}, ""]
+  end
+  if env["REQUEST_URI"] == "/git.js"
+    return concat_js
+  end
   ext = env["REQUEST_URI"].split(".").last
   case ext
   when "js"
@@ -88,3 +104,8 @@ run proc { |env|
     
   [200, {"Content-Type" => content_type}, [File.read(File.dirname(__FILE__) + "/../" + env["REQUEST_URI"])]]
 }
+
+
+
+
+
