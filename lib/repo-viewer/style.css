@@ -1,4 +1,8 @@
 
+body {
+  font-family: "Helvetica";
+}
+
 .controls {
   width: 100%;
 }
@@ -27,6 +31,7 @@
   overflow: scroll;
   width: 1100px;
   height: 200px;
+  font-size: 0.8em;
 }
 
 #commits .displayed {
