@@ -10,15 +10,21 @@
 #file-view {
   overflow: scroll;
   width: 800px;
-height: 600px;
+  height: 400px;
 }
 
 #top-directory {
   overflow: scroll;
   width: 250px;
-height: 600px;
+  height: 400px;
 }
 
 #jsgit-errors { 
   color: red;
+}
+
+#commits {
+  overflow: scroll;
+  width: 1100px;
+  height: 200px;
 }
