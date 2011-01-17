@@ -28,3 +28,7 @@
   width: 1100px;
   height: 200px;
 }
+
+#commits .displayed {
+  background-color: #ddf;
+}
