@@ -18,3 +18,7 @@ height: 600px;
   width: 250px;
 height: 600px;
 }
+
+#jsgit-errors { 
+  color: red;
+}

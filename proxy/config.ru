@@ -77,8 +77,7 @@ use GithubForwarder
 def concat_js
   load_file = File.read(File.dirname(__FILE__) + "/../lib/jsgit-client.js")
   paths = load_file.scan(/getScript\("\/([^"]*)"\)/)
-  p paths
-  js = []
+  js = ["jsGitInNode = false"]
   paths.each do |path|
     js << File.read(File.dirname(__FILE__) + "/../" + path.first)
   end
