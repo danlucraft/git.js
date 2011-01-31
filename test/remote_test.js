@@ -4,7 +4,15 @@ var createTestRepo = function() {
   return new JsGit.GithubProxyRepo("danlucraft", "clojure-dojo", "foopw") 
 }
   
+var REMOTE_TEST_DATA = {
+  infoRefs: "8c8d26e2f993c2c0112f5637cb05f06a95af34d8\trefs/heads/dbl-extract-models\n2d2d022c9955efc58bec5232116935de719efda4\trefs/heads/master\n"
+}
+
 exports.Remote = {
+  testParseDumbInfoRefs: function(test) {
+    test.done()
+  },
+  
   testGetRemote: function(test) {
     var repo = createTestRepo();
     var remote = repo.getRemote("origin")
