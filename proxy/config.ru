@@ -11,25 +11,29 @@ class GithubForwarder
     path = env["REQUEST_PATH"]
     query_string = env["QUERY_STRING"]
     puts "from: #{env["REQUEST_URI"]}"
-    if query_string =~ /server=https:\/\/github.com/
+    if path =~ /\/github/ or query_string =~ /server=http:\/\/github/
+      if path =~ /\/github\//
+        new_uri = "https://github.com" + path.gsub("/github", "") + "?" + query_string
+      else
+        params = {}
+        query_string.split("&").each do |pair_string|
+          pair = pair_string.split("=")
+          params[pair[0]] = pair[1] ? URI.decode(pair[1]) : ""
+        end
+        username = params.delete("username")
+        password = params.delete("password")
+        server = params.delete("server")
+      
+        new_uri = "#{server}#{path}"
+        params.each do |key, value|
+          new_uri += "?" unless new_uri =~ /(\?|&)$/
+          new_uri += key + "=" + URI.encode(value)
+        end
+      end
       req = Rack::Request.new(env)
       method = req.request_method.downcase
       method[0..0] = method[0..0].upcase
       
-      params = {}
-      query_string.split("&").each do |pair_string|
-        pair = pair_string.split("=")
-        params[pair[0]] = pair[1] ? URI.decode(pair[1]) : ""
-      end
-      username = params.delete("username")
-      password = params.delete("password")
-      server = params.delete("server")
-      
-      new_uri = "#{server}#{path}"
-      params.each do |key, value|
-        new_uri += "?" unless new_uri =~ /(\?|&)$/
-        new_uri += key + "=" + URI.encode(value)
-      end
       puts "forwarding to: #{new_uri}"
       new_uri = URI.parse(new_uri)
       
@@ -62,7 +66,7 @@ class GithubForwarder
         headers[k] = v unless k.to_s =~ /cookie|content-length|transfer-encoding/i
       end
       body = sub_response.read_body
-      p body
+      p body[0..200]
       File.open("response_body.bin", "w") {|fout| fout.print body}
       puts "done"
       [sub_response.code.to_i, headers, [body]]
