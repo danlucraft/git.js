@@ -31,7 +31,7 @@ exports.HttpRemote = {
   },
 
   testParseObjectData: function(test) {
-    var commit = JsGit.HttpRemote.parseObjectData("123", REMOTE_TEST_DATA.commitObjectData.data)
+    var commit = JsGit.HttpRemote.parseObjectData("123", JsGit.bytesToString(REMOTE_TEST_DATA.commitObjectData.data))
     test.equals(commit.type, "commit")
     test.equals(commit.sha, "123")
     test.equals(commit.tree, "c6b93605bd1e2171b3094f70cf61133b8f749bda")

@@ -34,11 +34,11 @@ exports.Repo = {
     test.done()
   },
   
-  testAddObject: function(test) {
+  testMakeAndAddObject: function(test) {
     var repo = new JsGit.Repo()
     test.deepEqual(repo.objectCount(), 0)
     
-    repo.addObject("asdfasdf", "blob", "Hello World!")
+    repo.makeAndAddObject("asdfasdf", "blob", "Hello World!")
     
     test.equals(repo.objectCount(), 1)
     test.deepEqual(repo.getObject("asdfasdf").type, "blob")
@@ -48,7 +48,7 @@ exports.Repo = {
   
   objectify: function(test) {
     var repo = new JsGit.Repo()
-    repo.addObject("abc123", "blob", "Hello World!")
+    repo.makeAndAddObject("abc123", "blob", "Hello World!")
     var object = repo.getObject("abc123")
     test.equals(repo.objectify("abc123"), object)
     test.equals(repo.objectify(object), object)
