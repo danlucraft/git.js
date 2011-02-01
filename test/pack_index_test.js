@@ -20,9 +20,9 @@ exports.PackIndex = {
     test.done()
   },
   
-  "estimatePackFileSize" : function(test) {
+  "estimatedPackFileSize" : function(test) {
     var packIndex = new JsGit.PackIndex(fixturePackIndex())
-    test.equal(packIndex.estimatePackFileSize(), 18056)
+    test.equal(packIndex.estimatedPackFileSize(), 18056)
     test.done()
   },
   
