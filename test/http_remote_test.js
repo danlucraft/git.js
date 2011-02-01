@@ -17,6 +17,10 @@ var REMOTE_TEST_DATA = {
       177, 229, 209, 225, 188, 255, 137, 203, 222, 219, 253, 81, 233, 241, 73, 125, 253, 2, 165, 163, 116, 193, 
       89, 227, 225, 36, 15, 196, 97, 143, 207, 201, 255, 47, 136, 107, 125, 213, 118, 7, 220, 54, 110, 249, 8, 
       173, 191, 80, 27, 20, 198, 249, 28, 188, 139, 55, 216, 129, 82, 86]
+  },
+  packList: {
+    data: "P pack-81a0a267d579c67e35e456a65aed6e96f6c87e23.pack\n\n",
+    result: ["81a0a267d579c67e35e456a65aed6e96f6c87e23"]
   }
   
 }
@@ -39,6 +43,14 @@ exports.HttpRemote = {
     test.equals(commit.author, "Sabrina Leandro <sabrina@songkick.com> 1290686547 +0000")
     test.equals(commit.committer, "Sabrina Leandro <sabrina@songkick.com> 1290686547 +0000")
     test.equals(commit.message, "Fixing appender mq in features")
+    test.done()
+  },
+  
+  testParsePackList: function(test) {
+    test.deepEqual(
+      JsGit.HttpRemote.parsePackList(REMOTE_TEST_DATA.packList.data),
+      REMOTE_TEST_DATA.packList.result
+    )
     test.done()
   }
 }
