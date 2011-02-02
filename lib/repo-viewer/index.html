@@ -27,10 +27,15 @@
         </td>
         <td>
           <div id="jsgit-errors"></div>
+          <div>
+            <a id="tree-view-select">Tree</a>
+            /
+            <a id="diff-view-select">Diff</a>
+          </div>
         </td>
       </tr>
     </table>
-    <table>
+    <table id="main">
       <tr>
         <td colspan="2">
           <div id="commits">
@@ -40,8 +45,8 @@
           </div>
         </td>
       </tr>
-      <tr>
-        <td style="vertical-align: top;">
+      <tr id="tree-view">
+        <td>
           <ul id="top-directory">
             <br />
             <br />
@@ -60,10 +65,16 @@
             <br />
           </ul>
         </td>
-        <td style="vertical-align: top;">
+        <td>
           <div id="main">
             <pre id="file-view">
             </pre>
+          </div>
+        </td>
+      </tr>
+      <tr id="diff-view" style="display:none;">
+        <td colspan="2">
+          <div id="diff-view-window">
           </div>
         </td>
       </tr>
@@ -82,7 +93,27 @@
           var refName = $("select#refs-list").val()
           RepoViewer.showRef(refName)
         })
+        
+        $("#diff-view-select").click(function(e) {
+          e.preventDefault()
+          $("#diff-view").show()
+          $("#tree-view").hide()
+        })
+        
+        $("#tree-view-select").click(function(e) {
+          e.preventDefault()
+          $("#tree-view").show()
+          $("#diff-view").hide()
+        })
       })
     </script>
   </body>
 </html>
+
+
+
+
+
+
+
+

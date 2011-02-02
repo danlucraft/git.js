@@ -11,10 +11,31 @@ body {
   color: red;
 }
 
+table#main td {
+  vertical-align: top;
+}
+
 #file-view {
   overflow: scroll;
   width: 800px;
   height: 400px;
+}
+
+#view-select a {
+  text-decoration: underline;
+}
+
+#view-select ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+#view-select ul li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  margin-top: 10px;
 }
 
 #top-directory {
@@ -36,4 +57,11 @@ body {
 
 #commits .displayed {
   background-color: #ddf;
+}
+
+#diff-view-window {
+  overflow: scroll;
+  width: 1100px;
+  height: 400px;
+  font-size: 0.8em;
 }
