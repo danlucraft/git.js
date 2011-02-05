@@ -65,3 +65,22 @@ table#main td {
   height: 400px;
   font-size: 0.8em;
 }
+
+.diff pre {
+  margin: 0;
+  font-size: 1.1em;
+}
+
+.diff {
+  margin: 5px;
+  padding: 5px;
+  border: 1px solid gray;
+}
+
+.diff .removed {
+  background-color: #FCC;
+}
+
+.diff .added {
+  background-color: #CFC;
+}
