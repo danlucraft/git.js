@@ -269,5 +269,48 @@ exports.MultipleSeparateHunks = {
   }
 }
 
+exports.MultipleConnectedHunks = {
+  "overlap by 1": function(test) {
+    var file1 = "123456789".split("").join("\n")
+    var file2 = "123xy4zq56789".split("").join("\n")
+    var diff = new JsGit.Diff(file1, file2, {context: 1})
+    test.equal(diff.info.length, 1)
+    test.deepEqual(
+      diff.info[0], 
+      {offset: 4, 
+        lines: [
+          {oldIndex: 3, newIndex: 3, line: "3", type:"context"},
+          {oldIndex: null, newIndex: 4, line: "x", type:"added"},
+          {oldIndex: null, newIndex: 5, line: "y", type:"added"},
+          {oldIndex: 4, newIndex: 6, line: "4", type:"context"},
+          {oldIndex: null, newIndex: 7, line: "z", type:"added"},
+          {oldIndex: null, newIndex: 8, line: "q", type:"added"},
+          {oldIndex: 5, newIndex: 9, line: "5", type:"context"}
+          ]})
+    test.done()
+  },
+  
+  "overlap by 2": function(test) {
+    var file1 = "123456789".split("").join("\n")
+    var file2 = "123xy4zq56789".split("").join("\n")
+    var diff = new JsGit.Diff(file1, file2, {context: 2})
+    test.equal(diff.info.length, 1)
+    test.deepEqual(
+      diff.info[0], 
+      {offset: 4, 
+        lines: [
+          {oldIndex: 2, newIndex: 2, line: "2", type:"context"},
+          {oldIndex: 3, newIndex: 3, line: "3", type:"context"},
+          {oldIndex: null, newIndex: 4, line: "x", type:"added"},
+          {oldIndex: null, newIndex: 5, line: "y", type:"added"},
+          {oldIndex: 4, newIndex: 6, line: "4", type:"context"},
+          {oldIndex: null, newIndex: 7, line: "z", type:"added"},
+          {oldIndex: null, newIndex: 8, line: "q", type:"added"},
+          {oldIndex: 5, newIndex: 9, line: "5", type:"context"},
+          {oldIndex: 6, newIndex: 10, line: "6", type:"context"}
+          ]})
+    test.done()
+  },
+}
 
 
