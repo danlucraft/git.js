@@ -1,6 +1,7 @@
 
 body {
   font-family: "Helvetica";
+  overflow: hidden;
 }
 
 .controls {
@@ -16,8 +17,15 @@ table#main td {
 }
 
 #file-view {
+  // overflow: scroll;
+  // width: 800px;
+  // height: 400px;
+  font-size: 0.8em;
+}
+
+#file-view .syntaxhighlighter {
   overflow: scroll;
-  width: 800px;
+  width: 800px !important;
   height: 400px;
 }
 
@@ -66,15 +74,44 @@ table#main td {
   font-size: 0.8em;
 }
 
+#diff-view-window .message {
+  font-size: 1.2em;
+}
+
+#diff-view-window .commit-summary {
+  margin-left: 20px;
+}
+
+#diff-view-window .modification {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+#diff-view-window .modification.new {
+  background-color: #CFC;
+}
+
+#diff-view-window .modification.changed {
+  background-color: #FFC;
+}
+
+#diff-view-window .modification.removed {
+  background-color: #FCC;
+}
+
 .diff pre {
   margin: 0;
   font-size: 1.1em;
 }
 
-.diff {
+.changed-file {
   margin: 5px;
   padding: 5px;
   border: 1px solid gray;
+}
+
+.changed-file .filename{
+  margin-bottom: 5px;
 }
 
 .diff .removed {

@@ -7,7 +7,11 @@
     <script src="/git.js"></script>
     <script src="repo-viewer.js"></script>
     <script src="/vendor/diff.js"></script>
+    <script src="/vendor/syntaxhighlighter_3.0.83/scripts/shCore.js"></script>
+    <script src="/vendor/syntaxhighlighter_3.0.83/scripts/shBrushRuby.js"></script>
     <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/vendor/syntaxhighlighter_3.0.83/styles/shCore.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/vendor/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" type="text/css" media="screen" />
   </head>
   <body>
     <table class="controls">
@@ -67,7 +71,7 @@
           </ul>
         </td>
         <td>
-          <div id="main">
+          <div id="file-main">
             <pre id="file-view">
             </pre>
           </div>
@@ -83,6 +87,7 @@
     
     <script type="text/javascript">
       $(document).ready(function() {
+        //SyntaxHighlighter.all()
         $("form#arbitrary-repo").submit(function(e) {
           e.preventDefault()
           var uri = $("input.arbitrary-uri").attr("value")
