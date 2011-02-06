@@ -25,10 +25,12 @@ exports.PackFileParser = {
       , contents: 
          [ { mode: '040000'
            , name: 'lib'
+           , type: 'tree'
            , sha: 'efc8e2195d39f6f457ee03bc5196961e36f7b536'
            }
          , { mode: '100644'
            , name: 'spec_helper.rb'
+           , type: 'blob'
            , sha: '9e2c5298f2c0c354ba582c990137ab9ff4026cf5'
            }
          ]

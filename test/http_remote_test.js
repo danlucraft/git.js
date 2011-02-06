@@ -40,8 +40,8 @@ exports.HttpRemote = {
     test.equals(commit.sha, "123")
     test.equals(commit.tree, "c6b93605bd1e2171b3094f70cf61133b8f749bda")
     test.deepEqual(commit.parents, ["0045cb644ca58857cc9fd981262c628abdcc415a"])
-    test.equals(commit.author, "Sabrina Leandro <sabrina@songkick.com> 1290686547 +0000")
-    test.equals(commit.committer, "Sabrina Leandro <sabrina@songkick.com> 1290686547 +0000")
+    test.equals(commit.author.justName, "Sabrina Leandro")
+    test.equals(commit.committer.justName, "Sabrina Leandro")
     test.equals(commit.message, "Fixing appender mq in features")
     test.done()
   },

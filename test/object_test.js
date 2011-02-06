@@ -27,8 +27,12 @@ exports.Commit = {
     var commit = new JsGit.objects.Commit("sha123", JsGit.bytesToString(testCommitData))
     
     test.equals(commit.tree, "c44942a959a822a3a785ed7c4a658db9690dd175")
-    test.equals(commit.author, "Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000")
-    test.equals(commit.committer, "Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000")
+    test.equals(commit.author.name, "Daniel Lucraft &lt;dan@fluentradical.com&gt;")
+    test.equals(commit.author.justName, "Daniel Lucraft")
+    test.equals(commit.author.timestamp, "1293454753")
+    test.equals(commit.committer.name, "Daniel Lucraft &lt;dan@fluentradical.com&gt;")
+    test.equals(commit.committer.justName, "Daniel Lucraft")
+    test.equals(commit.committer.timestamp, "1293454753")
     test.equals(commit.message, "Add sample files")
     test.done()
   }
@@ -53,11 +57,13 @@ exports.Tree = {
         {
           mode: "100644",
           name: "README",
+          type: "blob",
           sha: "fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7"
         },
         {
           mode: "040000",
           name: "lib",
+          type: "tree",
           sha: "ae511596e38ed675db0603a1344e4eea2f194634"
         }
       ])
