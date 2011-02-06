@@ -1,8 +1,6 @@
 
 require('../lib/jsgit-server')
 
-
-
 exports.SingleHunk = {
   "additions at end": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
@@ -172,6 +170,104 @@ exports.SingleHunk = {
     test.done()
   }
 }
+
+exports.MultipleSeparateHunks = {
+  "added then added": function(test) {
+    var file1 = "123456789".split("").join("\n")
+    var file2 = "123xy4567zq89".split("").join("\n")
+    var diff = new JsGit.Diff(file1, file2, {context: 1})
+    test.deepEqual(
+      diff.info[0], 
+      {offset: 4, 
+        lines: [
+          {oldIndex: 3, newIndex: 3, line: "3", type:"context"},
+          {oldIndex: null, newIndex: 4, line: "x", type:"added"},
+          {oldIndex: null, newIndex: 5, line: "y", type:"added"},
+          {oldIndex: 4, newIndex: 6, line: "4", type:"context"}
+        ]})
+    test.deepEqual(
+      diff.info[1], 
+      {offset: 10, 
+        lines: [
+          {oldIndex: 7, newIndex: 9, line: "7", type:"context"},
+          {oldIndex: null, newIndex: 10, line: "z", type:"added"},
+          {oldIndex: null, newIndex: 11, line: "q", type:"added"},
+          {oldIndex: 8, newIndex: 12, line: "8", type:"context"}
+        ]})
+    test.done()
+  },
   
+  "removed then removed": function(test) {
+    var file1 = "123456789".split("").join("\n")
+    var file2 = "1345689".split("").join("\n")
+    var diff = new JsGit.Diff(file1, file2, {context: 1})
+    test.deepEqual(
+      diff.info[0], 
+      {offset: 2, 
+        lines: [
+          {oldIndex: 1, newIndex: 1, line: "1", type:"context"},
+          {oldIndex: 2, newIndex: null, line: "2", type:"removed"},
+          {oldIndex: 3, newIndex: 2, line: "3", type:"context"}
+        ]})
+    test.deepEqual(
+      diff.info[1], 
+      {offset: 6, 
+        lines: [
+          {oldIndex: 6, newIndex: 5, line: "6", type:"context"},
+          {oldIndex: 7, newIndex: null, line: "7", type:"removed"},
+          {oldIndex: 8, newIndex: 6, line: "8", type:"context"}
+        ]})
+    test.done()
+  },
+  
+  "added then removed": function(test) {
+    var file1 = "123456789".split("").join("\n")
+    var file2 = "123xy45689".split("").join("\n")
+    var diff = new JsGit.Diff(file1, file2, {context: 1})
+    test.deepEqual(
+      diff.info[0], 
+      {offset: 4, 
+        lines: [
+          {oldIndex: 3, newIndex: 3, line: "3", type:"context"},
+          {oldIndex: null, newIndex: 4, line: "x", type:"added"},
+          {oldIndex: null, newIndex: 5, line: "y", type:"added"},
+          {oldIndex: 4, newIndex: 6, line: "4", type:"context"}
+        ]})
+    test.deepEqual(
+      diff.info[1], 
+      {offset: 9, 
+        lines: [
+          {oldIndex: 6, newIndex: 8, line: "6", type:"context"},
+          {oldIndex: 7, newIndex: null, line: "7", type:"removed"},
+          {oldIndex: 8, newIndex: 9, line: "8", type:"context"}
+        ]})
+    test.done()
+  },
+  
+  "removed then added": function(test) {
+    var file1 = "123456789".split("").join("\n")
+    var file2 = "134567xq89".split("").join("\n")
+    var diff = new JsGit.Diff(file1, file2, {context: 1})
+    test.deepEqual(
+      diff.info[0], 
+      {offset: 2, 
+        lines: [
+          {oldIndex: 1, newIndex: 1, line: "1", type:"context"},
+          {oldIndex: 2, newIndex: null, line: "2", type:"removed"},
+          {oldIndex: 3, newIndex: 2, line: "3", type:"context"}
+        ]})
+    test.deepEqual(
+      diff.info[1], 
+      {offset: 7, 
+        lines: [
+          {oldIndex: 7, newIndex: 6, line: "7", type:"context"},
+          {oldIndex: null, newIndex: 7, line: "x", type:"added"},
+          {oldIndex: null, newIndex: 8, line: "q", type:"added"},
+          {oldIndex: 8, newIndex: 9, line: "8", type:"context"}
+        ]})
+    test.done()
+  }
+}
+
 
 
