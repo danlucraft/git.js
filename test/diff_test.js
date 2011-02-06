@@ -1,6 +1,37 @@
 
 require('../lib/jsgit-server')
 
+exports.NullEndpoints = {
+  "null start": function(test) {
+    var file1 = ""
+    var file2 = ["a", "b", "c"].join("\n")
+    var diff = new JsGit.Diff(file1, file2)
+    test.deepEqual(
+      diff.info, 
+      [{offset: 1, 
+        lines: [
+          {oldIndex: null, newIndex: 1, line: "a", type:"added"},
+          {oldIndex: null, newIndex: 2, line: "b", type:"added"},
+          {oldIndex: null, newIndex: 3, line: "c", type:"added"}
+        ]}])
+    test.done()
+  },
+  "null end": function(test) {
+    var file1 = ["a", "b", "c"].join("\n")
+    var file2 = ""
+    var diff = new JsGit.Diff(file1, file2)
+    test.deepEqual(
+      diff.info, 
+      [{offset: 1, 
+        lines: [
+          {oldIndex: 1, newIndex: null, line: "a", type:"removed"},
+          {oldIndex: 2, newIndex: null, line: "b", type:"removed"},
+          {oldIndex: 3, newIndex: null, line: "c", type:"removed"}
+        ]}])
+    test.done()
+  }
+}
+  
 exports.SingleHunk = {
   "additions at end": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
