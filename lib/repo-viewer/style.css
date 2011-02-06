@@ -74,6 +74,16 @@ table#main td {
   font-size: 0.8em;
 }
 
+#diff-view-window .gravatar {
+  padding: 3px;
+  padding-bottom: 0px;
+  border: 1px solid black;
+  margin-top: 10px;
+  margin-right: 10px;
+  float: right;
+}
+
+
 #diff-view-window .message {
   font-size: 1.2em;
 }
