@@ -94,6 +94,23 @@ exports.DiffRemoved = {
     test.done()
   },
   
+  "diffs files correctly with removals in middle": function(test) {
+    var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
+    var file2 = ["a", "b", "e", "f"].join("\n")
+    var diff = new JsGit.Diff(file1, file2)
+    test.deepEqual(
+      diff.info, 
+      [{offset: 3, 
+        lines: [
+          {oldIndex: 1, newIndex: 1, line: "a", type:"context"},
+          {oldIndex: 2, newIndex: 2, line: "b", type:"context"},
+          {oldIndex: 3, newIndex: null, line: "c", type:"removed"},
+          {oldIndex: 4, newIndex: null, line: "d", type:"removed"},
+          {oldIndex: 5, newIndex: 3, line: "e", type:"context"},
+          {oldIndex: 6, newIndex: 4, line: "f", type:"context"},
+        ]}])
+    test.done()
+  }
 }
 
 
