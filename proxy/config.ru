@@ -85,7 +85,9 @@ def concat_js
   paths.each do |path|
     js << File.read(File.dirname(__FILE__) + "/../" + path.first)
   end
-  [200, {"Content-Type" => "text/javascript"}, js.join("\n\n")]
+  total_js = js.join("\n\n")
+  File.open("../lib/git.js", "w") {|f| f.puts total_js }
+  [200, {"Content-Type" => "text/javascript"}, total_js]
 end
 
 run proc { |env|
