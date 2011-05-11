@@ -1,20 +1,20 @@
 require('../lib/jsgit-server')
 
-exports.Repo = { 
+exports.MemoryRepo = { 
   testCreate: function(test) {
-    var repo = new JsGit.Repo()
+    var repo = new JsGit.MemoryRepo()
     test.done()
   },
   
   testEmpty: function(test) {
-    var repo = new JsGit.Repo()
+    var repo = new JsGit.MemoryRepo()
     test.equal(repo.getRefs().length, 0)
     test.equal(repo.getRemotes().length, 0)
     test.done()
   },
   
   testAddRef: function(test) {
-    var repo = new JsGit.Repo()
+    var repo = new JsGit.MemoryRepo()
     test.deepEqual(repo.getRefs(), [])
     
     repo.addRef("refs/heads/master", "yurrffff")
@@ -24,7 +24,7 @@ exports.Repo = {
   },
   
   testAddRemote: function(test) {
-    var repo = new JsGit.Repo()
+    var repo = new JsGit.MemoryRepo()
     test.deepEqual(repo.getRemotes(), [])
     
     repo.addRemote("origin", "http://www.yahoo.com/")
@@ -35,7 +35,7 @@ exports.Repo = {
   },
   
   testMakeAndAddObject: function(test) {
-    var repo = new JsGit.Repo()
+    var repo = new JsGit.MemoryRepo()
     test.deepEqual(repo.objectCount(), 0)
     
     repo.makeAndAddObject("asdfasdf", "blob", "Hello World!")
