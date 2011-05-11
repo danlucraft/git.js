@@ -14,7 +14,7 @@ JsGitTestData = {
 exports['PackFileParser'] = {
   "master pack": function(test) {
     myDebug("master pack")
-    test.deepEqual(new JsGit.PackFile(JsGitTestData.pack).parseAll().getObjects(),
+    test.deepEqual(new JsGit.Pack(JsGitTestData.pack).parseAll().getObjects(),
     [ { sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
       , type: "commit"
       , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
@@ -41,7 +41,7 @@ exports['PackFileParser'] = {
   },
   "branch1 pack": function(test) {
     myDebug("branch1 pack")
-    test.deepEqual(new JsGit.PackFile(JsGitTestData.packBranch1).parseAll().getObjects(), 
+    test.deepEqual(new JsGit.Pack(JsGitTestData.packBranch1).parseAll().getObjects(), 
       [ { type: 'commit'
         , sha: '9f82761f8982d751097a922933467b798ae0158d'
         , data: 'tree 6341864dce4bc028f1ead9277261b98cecf6a4e5\nparent b3453be87b70a0c5dea28aacd49cf34ddb91a8c5\nauthor Daniel Lucraft <dan@fluentradical.com> 1293969635 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293969635 +0000\n\nAdded LICENSE and a branch note to the README\n'
