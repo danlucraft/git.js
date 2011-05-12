@@ -24,16 +24,18 @@ describe("--git-dir", function() {
   })
 })
 
-describe("commands", function() {
-  it("should run the show command", function() {
+describe("show command", function() {
+  it("should pass in commit ids ", function() {
     spyOn(mockRunner, 'show')
-    var cli = new JsGit.Cli(["show"], mockRunner)
+    var cli = new JsGit.Cli(["show", "123abc"], mockRunner)
     
     cli.run()
     
-    expect(mockRunner.show).toHaveBeenCalledWith(cli.repo)
+    expect(mockRunner.show).toHaveBeenCalledWith(cli.repo, ["123abc"])
   })
-  
+})
+
+describe("log command", function() {  
   it("should run the log command", function() {
     spyOn(mockRunner, 'log')
     var cli = new JsGit.Cli(["log"], mockRunner)
