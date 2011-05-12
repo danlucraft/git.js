@@ -7,20 +7,20 @@ describe("--git-dir", function() {
   it("default should be the current working directory", function() {
     var cli = new JsGit.Cli()
     
-    expect(cli.repo.dir).toEqual(process.cwd())
+    expect(cli.repoDir).toEqual(process.cwd())
   })
   
   it("can specify a relative git dir", function() {
     var cli = new JsGit.Cli(["--git-dir=.."])
     
-    expect(cli.repo.dir).toEqual(path.join(process.cwd(), ".."))
+    expect(cli.repoDir).toEqual(path.join(process.cwd(), ".."))
   })
   
   it("can specify an absolute git dir", function() {
     var test_dir = path.join(process.cwd(), "..", "..")
     var cli = new JsGit.Cli(["--git-dir=" + test_dir])
     
-    expect(cli.repo.dir).toEqual(path.join(process.cwd(), "..", ".."))
+    expect(cli.repoDir).toEqual(path.join(process.cwd(), "..", ".."))
   })
 })
 
@@ -31,7 +31,7 @@ describe("show command", function() {
     
     cli.run()
     
-    expect(mockRunner.show).toHaveBeenCalledWith(cli.repo, ["123abc"])
+    expect(mockRunner.show).toHaveBeenCalled()
   })
 })
 
@@ -42,6 +42,6 @@ describe("log command", function() {
     
     cli.run()
     
-    expect(mockRunner.log).toHaveBeenCalledWith(cli.repo)
+    expect(mockRunner.log).toHaveBeenCalled()
   })
 })

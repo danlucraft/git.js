@@ -18,7 +18,7 @@ exports.PackFileParser = {
   "supports random access by offset": function(test) {
     var packFile = new JsGit.Pack(fixturePackFile())
     test.deepEqual(
-      packFile.getObjectAtOffset(10229), 
+      packFile.getObjectAtOffset(10229).id(), 
       { type: 'tree'
       , sha: 'd3e1f6c063d0e579ce8b7f85324996c57b87fdcf'
       , data: '40000 lib\u0000\u00ef\u00c8\u00e2\u0019]9\u00f6\u00f4W\u00ee\u0003\u00bcQ\u0096\u0096\u001e6\u00f7\u00b56100644 spec_helper.rb\u0000\u009e,R\u0098\u00f2\u00c0\u00c3T\u00baX,\u0099\u00017\u00ab\u009f\u00f4\u0002l\u00f5'
