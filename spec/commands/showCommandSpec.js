@@ -93,4 +93,23 @@ describe("git show", function() {
       expect(output).toMatch(/lib\//)
     })
   })
+  
+  it("should show a packed commit", function() {
+    var sha = "8e8b973cde2e6470626dedfc5d82716d1450dcda"
+    var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
+    var output = null
+    
+    cmd.run(function(r) { output = r })
+    
+    waitsFor(function() { return output },
+      "Never found object", 10000)
+      
+    runs(function() {
+      expect(output).toMatch(/commit 8e8b973cde2e6470626dedfc5d82716d1450dcda/)
+      expect(output).toMatch(/Author: Daniel Lucraft <dan@fluentradical.com>/)
+      expect(output).toMatch(/Date:   Mon Jan 03 2011 07:08:08 GMT\+0000 \(GMT\)/)
+      expect(output).toMatch(/Thoroughly modified the README/)
+    })
+  })
+  
 })
