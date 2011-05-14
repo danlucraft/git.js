@@ -6,8 +6,8 @@ describe("git show", function() {
   var packedRepo
 
   beforeEach(function () {
-    looseRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1"))
-    packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed"))
+    looseRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
   })
   
   it("should show a loose blob", function() {

@@ -4,23 +4,23 @@ var path = require('path')
 var mockRunner = {show:function() {}, log:function() {}}
 
 describe("--git-dir", function() {
-  it("default should be the current working directory", function() {
+  it("default should be the current working directory + .git", function() {
     var cli = new JsGit.Cli()
     
-    expect(cli.repoDir).toEqual(process.cwd())
+    expect(cli.gitDir).toEqual(path.join(process.cwd(), ".git"))
   })
   
   it("can specify a relative git dir", function() {
     var cli = new JsGit.Cli(["--git-dir=.."])
     
-    expect(cli.repoDir).toEqual(path.join(process.cwd(), ".."))
+    expect(cli.gitDir).toEqual(path.join(process.cwd(), ".."))
   })
   
   it("can specify an absolute git dir", function() {
     var test_dir = path.join(process.cwd(), "..", "..")
     var cli = new JsGit.Cli(["--git-dir=" + test_dir])
     
-    expect(cli.repoDir).toEqual(path.join(process.cwd(), "..", ".."))
+    expect(cli.gitDir).toEqual(path.join(process.cwd(), "..", ".."))
   })
 })
 
