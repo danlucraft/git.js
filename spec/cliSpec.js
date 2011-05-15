@@ -1,7 +1,7 @@
 require('../lib/jsgit-server')
 var path = require('path')
 
-var mockRunner = {show:function() {}, log:function() {}}
+var mockRunner = {show:function() {}, log:function() {}, branch:function() {}}
 
 describe("--git-dir", function() {
   it("default should be the current working directory + .git", function() {
@@ -43,5 +43,16 @@ describe("log command", function() {
     cli.run()
     
     expect(mockRunner.log).toHaveBeenCalled()
+  })
+})
+
+describe("branch command", function() {  
+  it("should run the branch command", function() {
+    spyOn(mockRunner, 'branch')
+    var cli = new JsGit.Cli(["branch"], mockRunner)
+    
+    cli.run()
+    
+    expect(mockRunner.branch).toHaveBeenCalled()
   })
 })
