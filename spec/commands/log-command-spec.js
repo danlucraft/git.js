@@ -33,19 +33,19 @@ describe("git log", function() {
          "Author: Daniel Lucraft <dan@fluentradical.com>\n" + 
          "Date:   Mon Jan 03 2011 07:22:59 GMT+0000 (GMT)\n" + 
          "\n" + 
-         "Modifiying master" //+ 
-         // "                                               \n" + 
-         // "commit d0a9e5b650718445b53cd1cab40d21fb3891c98a\n" + 
-         // "Author: Daniel Lucraft <dan@fluentradical.com> \n" + 
-         // "Date:   Mon Jan 3 07:14:11 2011 +0000          \n" + 
-         // "                                               \n" + 
-         // "    Modify README                              \n" + 
-         // "                                               \n" + 
-         // "commit b3453be87b70a0c5dea28aacd49cf34ddb91a8c5\n" + 
-         // "Author: Daniel Lucraft <dan@fluentradical.com> \n" + 
-         // "Date:   Mon Dec 27 12:59:13 2010 +0000         \n" + 
-         // "                                               \n" + 
-         // "    Add sample files                           \n"
+         "Modifiying master\n" + 
+         "\n" + 
+         "commit d0a9e5b650718445b53cd1cab40d21fb3891c98a\n" + 
+         "Author: Daniel Lucraft <dan@fluentradical.com>\n" + 
+         "Date:   Mon Jan 03 2011 07:14:11 GMT+0000 (GMT)\n" + 
+         "\n" + 
+         "Modify README\n" + 
+         "\n" + 
+         "commit b3453be87b70a0c5dea28aacd49cf34ddb91a8c5\n" + 
+         "Author: Daniel Lucraft <dan@fluentradical.com>\n" + 
+         "Date:   Mon Dec 27 2010 12:59:13 GMT+0000 (GMT)\n" + 
+         "\n" + 
+         "Add sample files"
       expect(output).toEqual(str)
     })
   })
