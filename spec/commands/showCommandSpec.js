@@ -10,9 +10,7 @@ describe("git show", function() {
     packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
   })
   
-  it("should show a loose blob", function() {
-    var sha = "17cd63e8471b837707bb7840e87b1772579ab784"
-    var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
+  var expectOutput = function(cmd, cb) {
     var output = null
     
     cmd.run(function(r) { output = r })
@@ -21,6 +19,15 @@ describe("git show", function() {
       "Never found object", 10000)
       
     runs(function() {
+      cb(output)
+    })
+  }
+   
+  it("should show a loose blob", function() {
+    var sha = "17cd63e8471b837707bb7840e87b1772579ab784"
+    var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
+    
+    expectOutput(cmd, function(output) {
       expect(output).not.toMatch(/^blob/)
       expect(output).toMatch(/Just a test repo for something I'm working on/)
     })
@@ -29,14 +36,8 @@ describe("git show", function() {
   it("should show a packed blob", function() {
     var sha = "17cd63e8471b837707bb7840e87b1772579ab784"
     var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
-    var output = null
-    
-    cmd.run(function(r) { output = r })
-    
-    waitsFor(function() { return output },
-      "Never found object", 10000)
       
-    runs(function() {
+    expectOutput(cmd, function(output) {
       expect(output).not.toMatch(/^blob/)
       expect(output).toMatch(/Just a test repo for something I'm working on/)
     })
@@ -45,14 +46,8 @@ describe("git show", function() {
   it("should show a loose commit", function() {
     var sha = "8e8b973cde2e6470626dedfc5d82716d1450dcda"
     var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
-    var output = null
     
-    cmd.run(function(r) { output = r })
-    
-    waitsFor(function() { return output },
-      "Never found object", 10000)
-      
-    runs(function() {
+    expectOutput(cmd, function(output) {
       expect(output).toMatch(/commit 8e8b973cde2e6470626dedfc5d82716d1450dcda/)
       expect(output).toMatch(/Author: Daniel Lucraft <dan@fluentradical.com>/)
       expect(output).toMatch(/Date:   Mon Jan 03 2011 07:08:08 GMT\+0000 \(GMT\)/)
@@ -63,14 +58,8 @@ describe("git show", function() {
   it("should show a loose tree", function() {
     var sha = "5541389163ccf38f7138c50c691c05e790d122d1"
     var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
-    var output = null
     
-    cmd.run(function(r) { output = r })
-    
-    waitsFor(function() { return output },
-      "Never found object", 10000)
-      
-    runs(function() {
+    expectOutput(cmd, function(output) {
       expect(output).toMatch(/tree 5541389163ccf38f7138c50c691c05e790d122d1/)
       expect(output).toMatch(/README/)
       expect(output).toMatch(/lib\//)
@@ -80,14 +69,8 @@ describe("git show", function() {
   it("should show a packed tree", function() {
     var sha = "5541389163ccf38f7138c50c691c05e790d122d1"
     var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
-    var output = null
     
-    cmd.run(function(r) { output = r })
-    
-    waitsFor(function() { return output },
-      "Never found object", 10000)
-      
-    runs(function() {
+    expectOutput(cmd, function(output) {
       expect(output).toMatch(/tree 5541389163ccf38f7138c50c691c05e790d122d1/)
       expect(output).toMatch(/README/)
       expect(output).toMatch(/lib\//)
@@ -97,14 +80,8 @@ describe("git show", function() {
   it("should show a packed commit", function() {
     var sha = "8e8b973cde2e6470626dedfc5d82716d1450dcda"
     var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
-    var output = null
-    
-    cmd.run(function(r) { output = r })
-    
-    waitsFor(function() { return output },
-      "Never found object", 10000)
       
-    runs(function() {
+    expectOutput(cmd, function(output) {
       expect(output).toMatch(/commit 8e8b973cde2e6470626dedfc5d82716d1450dcda/)
       expect(output).toMatch(/Author: Daniel Lucraft <dan@fluentradical.com>/)
       expect(output).toMatch(/Date:   Mon Jan 03 2011 07:08:08 GMT\+0000 \(GMT\)/)
