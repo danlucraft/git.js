@@ -11,7 +11,7 @@ describe("git branch", function() {
     cmd.run(function(e, r) { if (e) { throw(e) }; output = r })
     
     waitsFor(function() { return output },
-      "Never found object", 10000)
+      "Never received output", 10000)
       
       runs(function() {
       cb(output)

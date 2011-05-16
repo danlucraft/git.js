@@ -9,10 +9,10 @@ describe("git show", function() {
   var expectOutput = function(cmd, cb) {
     var output = null
     
-    cmd.run(function(r) { output = r })
+    cmd.run(function(e, r) { if (e) { throw(e) }; output = r })
     
     waitsFor(function() { return output },
-      "Never found object", 10000)
+      "Never received output", 1000)
       
       runs(function() {
       cb(output)
