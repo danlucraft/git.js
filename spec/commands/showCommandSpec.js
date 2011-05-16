@@ -1,15 +1,11 @@
 require('../../lib/jsgit-server')
+
 var path = require('path')
 
 describe("git show", function() {
   var looseRepo
   var packedRepo
 
-  beforeEach(function () {
-    looseRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
-    packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
-  })
-  
   var expectOutput = function(cmd, cb) {
     var output = null
     
@@ -18,11 +14,16 @@ describe("git show", function() {
     waitsFor(function() { return output },
       "Never found object", 10000)
       
-    runs(function() {
+      runs(function() {
       cb(output)
     })
   }
-   
+
+  beforeEach(function () {
+    looseRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
+  })
+  
   it("should show a loose blob", function() {
     var sha = "17cd63e8471b837707bb7840e87b1772579ab784"
     var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
