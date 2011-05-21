@@ -14,3 +14,16 @@ namespace :test do
     rm_rf "test-repo"
   end
 end
+
+desc "Concatenate the javascript for the client"
+task :package_client do
+  load_file = File.read(File.dirname(__FILE__) + "/lib/git-client.js")
+  paths = load_file.scan(/getScript\("\/([^"]*)"\)/)
+  js = ["jsGitInNode = false"]
+  paths.each do |path|
+    js << File.read(File.dirname(__FILE__) + "/" + path.first)
+  end
+  total_js = js.join("\n\n")
+  File.open("lib/git.min.js", "w") {|f| f.puts total_js }
+  [200, {"Content-Type" => "text/javascript"}, [total_js]]
+end

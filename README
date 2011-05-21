@@ -1,5 +1,0 @@
-
-Don't forget to load the example using the localhost, otherwise it won't work (same origin).
-
-(This causes a POST from jquery to become an OPTIONS at the server (wtf?))
-^^ Ha! this is because of the preflighting!
