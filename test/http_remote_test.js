@@ -1,4 +1,4 @@
-require('../lib/jsgit-server')
+require('../lib/git-server')
 
 var REMOTE_TEST_DATA = {
   infoRefs: {
@@ -28,14 +28,14 @@ var REMOTE_TEST_DATA = {
 exports.HttpRemote = {
   testParseDumbInfoRefs: function(test) {
     test.deepEqual(
-      JsGit.HttpRemote.parseInfoRefs(REMOTE_TEST_DATA.infoRefs.data),
+      Git.HttpRemote.parseInfoRefs(REMOTE_TEST_DATA.infoRefs.data),
       REMOTE_TEST_DATA.infoRefs.result
     )
     test.done()
   },
 
   testParseObjectData: function(test) {
-    var commit = JsGit.HttpRemote.parseObjectData("123", JsGit.bytesToString(REMOTE_TEST_DATA.commitObjectData.data))
+    var commit = Git.HttpRemote.parseObjectData("123", Git.bytesToString(REMOTE_TEST_DATA.commitObjectData.data))
     test.equals(commit.type, "commit")
     test.equals(commit.sha, "123")
     test.equals(commit.tree, "c6b93605bd1e2171b3094f70cf61133b8f749bda")
@@ -48,7 +48,7 @@ exports.HttpRemote = {
   
   testParsePackList: function(test) {
     test.deepEqual(
-      JsGit.HttpRemote.parsePackList(REMOTE_TEST_DATA.packList.data),
+      Git.HttpRemote.parsePackList(REMOTE_TEST_DATA.packList.data),
       REMOTE_TEST_DATA.packList.result
     )
     test.done()

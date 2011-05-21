@@ -1,4 +1,4 @@
-require('../../lib/jsgit-server')
+require('../../lib/git-server')
 
 var path = require('path')
 
@@ -20,13 +20,13 @@ describe("git show", function() {
   }
 
   beforeEach(function () {
-    looseRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
-    packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
+    looseRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    packedRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
   })
   
   it("should show a loose blob", function() {
     var sha = "17cd63e8471b837707bb7840e87b1772579ab784"
-    var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
+    var cmd = new Git.commands.ShowCommand(looseRepo, [sha])
     
     expectOutput(cmd, function(output) {
       expect(output).not.toMatch(/^blob/)
@@ -36,7 +36,7 @@ describe("git show", function() {
   
   it("should show a packed blob", function() {
     var sha = "17cd63e8471b837707bb7840e87b1772579ab784"
-    var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
+    var cmd = new Git.commands.ShowCommand(packedRepo, [sha])
       
     expectOutput(cmd, function(output) {
       expect(output).not.toMatch(/^blob/)
@@ -46,7 +46,7 @@ describe("git show", function() {
   
   it("should show a loose commit", function() {
     var sha = "8e8b973cde2e6470626dedfc5d82716d1450dcda"
-    var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
+    var cmd = new Git.commands.ShowCommand(looseRepo, [sha])
     
     expectOutput(cmd, function(output) {
       expect(output).toMatch(/commit 8e8b973cde2e6470626dedfc5d82716d1450dcda/)
@@ -58,7 +58,7 @@ describe("git show", function() {
   
   it("should show a loose tree", function() {
     var sha = "5541389163ccf38f7138c50c691c05e790d122d1"
-    var cmd = new JsGit.commands.ShowCommand(looseRepo, [sha])
+    var cmd = new Git.commands.ShowCommand(looseRepo, [sha])
     
     expectOutput(cmd, function(output) {
       expect(output).toMatch(/tree 5541389163ccf38f7138c50c691c05e790d122d1/)
@@ -69,7 +69,7 @@ describe("git show", function() {
   
   it("should show a packed tree", function() {
     var sha = "5541389163ccf38f7138c50c691c05e790d122d1"
-    var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
+    var cmd = new Git.commands.ShowCommand(packedRepo, [sha])
     
     expectOutput(cmd, function(output) {
       expect(output).toMatch(/tree 5541389163ccf38f7138c50c691c05e790d122d1/)
@@ -80,7 +80,7 @@ describe("git show", function() {
   
   it("should show a packed commit", function() {
     var sha = "8e8b973cde2e6470626dedfc5d82716d1450dcda"
-    var cmd = new JsGit.commands.ShowCommand(packedRepo, [sha])
+    var cmd = new Git.commands.ShowCommand(packedRepo, [sha])
       
     expectOutput(cmd, function(output) {
       expect(output).toMatch(/commit 8e8b973cde2e6470626dedfc5d82716d1450dcda/)

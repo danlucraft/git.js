@@ -1,4 +1,4 @@
-require('../../lib/jsgit-server')
+require('../../lib/git-server')
 
 var path = require('path')
 
@@ -19,11 +19,11 @@ describe("git branch", function() {
   }
 
   beforeEach(function () {
-    repo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    repo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
   })
   
   it("should show a list of branches, with the current highlighted", function() {
-    var cmd = new JsGit.commands.BranchCommand(repo, [])
+    var cmd = new Git.commands.BranchCommand(repo, [])
 
     expectOutput(cmd, function(output) {
       expect(output).toMatch(/branch1/)

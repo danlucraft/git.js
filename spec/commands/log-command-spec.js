@@ -1,4 +1,4 @@
-require('../../lib/jsgit-server')
+require('../../lib/git-server')
 
 var path = require('path')
 
@@ -20,12 +20,12 @@ describe("git log", function() {
   }
 
   beforeEach(function () {
-    looseRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
-    packedRepo = new JsGit.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
+    looseRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    packedRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
   })
   
   it("should show a list of branches, with the current highlighted", function() {
-    var cmd = new JsGit.commands.LogCommand(looseRepo, [])
+    var cmd = new Git.commands.LogCommand(looseRepo, [])
 
     expectOutput(cmd, function(output) {
       str = 
