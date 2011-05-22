@@ -27,3 +27,8 @@ task :package_client do
   File.open("lib/git.min.js", "w") {|f| f.puts total_js }
   [200, {"Content-Type" => "text/javascript"}, [total_js]]
 end
+
+desc "Run the demo repo-viewer webapp off a local git http instance"
+task :demo do
+  exec("thin -R demos/config.ru -p 9292 start")
+end
