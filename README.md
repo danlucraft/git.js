@@ -42,6 +42,9 @@ Plans
  * package for npm
  * writing to repos: committing, branching
  * improving the client side API
+
+DONE:
+
  * making it easy to run the included demo repo-viewer webapp
 
 License
