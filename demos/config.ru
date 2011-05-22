@@ -34,7 +34,7 @@ end
 serve_path = File.expand_path(File.dirname(__FILE__) + "/serve")
 GRACK_CONFIG = {
   :project_root => serve_path,
-  :git_path     => '/usr/local/bin/git',
+  :git_path     => `which git`.chomp,
   :upload_pack  => true,
   :receive_pack => true,
 }
