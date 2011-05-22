@@ -28,6 +28,14 @@ The client side API implements:
  * browsing the object graph
  * creating HTML object diffs
 
+
+Usage
+-----
+
+To demo the in-browser repo viewer, install thin and run:
+
+    $ rake demo
+
 Plans
 -----
 

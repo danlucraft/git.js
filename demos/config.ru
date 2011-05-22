@@ -45,4 +45,10 @@ use ServeGitJs
 run GitHttp::App.new(GRACK_CONFIG)
 
 setup_demo_repo
-puts "serving git repos from #{serve_path} at http://localhost:9292"
+bold = "\033[1m"
+nobold = "\033[0m"
+puts
+puts " * visit #{bold}http://localhost:9292/repo-viewer/index.html#{nobold}"
+puts " * serving git repos from #{bold}#{serve_path}#{nobold}. "
+puts " * Add more (bare) repos here to view them in repo-viewer. (SMALL repos work best) "
+puts
