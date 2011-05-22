@@ -1,11 +1,11 @@
 
 
-GITHUB_URL = "https://danlucraft:#{File.read("githubpw").chomp}@github.com/danlucraft/clojure-dojo.git"
-ORIG_COMMIT = "b60971573593e660dcef1e43a63a01890bfc667a"
 
 namespace :test do
   desc "Reset the github test repo"
   task :reset do
+    github_url = "https://danlucraft:#{File.read("githubpw").chomp}@github.com/danlucraft/clojure-dojo.git"
+    orig_commit = "b60971573593e660dcef1e43a63a01890bfc667a"
     sh "git clone #{GITHUB_URL} test-repo"
     cd "test-repo" do
       sh("git reset #{ORIG_COMMIT} --hard")
@@ -25,10 +25,10 @@ task :package_client do
   end
   total_js = js.join("\n\n")
   File.open("lib/git.min.js", "w") {|f| f.puts total_js }
-  [200, {"Content-Type" => "text/javascript"}, [total_js]]
+  puts "packaged lib/git.min.js"
 end
 
 desc "Run the demo repo-viewer webapp off a local git http instance"
-task :demo do
+task :demo => :package_client do
   exec("thin -R demos/config.ru -p 9292 start")
 end
