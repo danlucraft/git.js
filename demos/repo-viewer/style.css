@@ -12,11 +12,15 @@ body {
 }
 
 .top {
-  height: 260px;
+  height: 240px;
 }
 
 .bottom {
-  height: 200px;
+  position:absolute;
+  top: 320px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
 }
 
 .header {
@@ -53,9 +57,9 @@ table#main td {
 
 
 #file-view {
-  // overflow: scroll;
-  // width: 800px;
-  // height: 400px;
+  overflow: scroll;
+  width: 800px;
+  height: 400px;
   font-size: 0.8em;
 }
 
@@ -97,6 +101,7 @@ table#main td {
   width: 100%;
   height: 100%;
   font-size: 0.8em;
+  padding: 5px;
 }
 
 #commits table {
@@ -113,6 +118,7 @@ table#main td {
 
 #diff-view {
   height: 100%;
+  padding: 10px;
 }
 
 #diff-view-window {
