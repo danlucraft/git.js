@@ -28,7 +28,6 @@ The client side API implements:
  * browsing the object graph
  * creating HTML object diffs
 
-
 Usage
 -----
 

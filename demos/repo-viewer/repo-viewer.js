@@ -193,7 +193,7 @@ RepoViewer = {
     str += "<hr>"
     str += "<pre class='message'>" + commit.message + "</pre>"
     
-    $("#diff-view-window").html(str)
+    $("#diff").html(str)
   },
   
   treeAsHash: function(tree) {
@@ -223,7 +223,7 @@ RepoViewer = {
         })
         str.push("</table>")
         str.push("<hr>")
-        $("#diff-view-window").append(str.join("\n"))
+        $("#diff").append(str.join("\n"))
         
         var str = []
         _(changes).each(function(change) {
@@ -233,7 +233,7 @@ RepoViewer = {
           str.push(diff.toHtml())
           str.push("</div>")
         })
-        $("#diff-view-window").append(str.join("\n"))
+        $("#diff").append(str.join("\n"))
       })
       treeDiffGenerator.generate()
     })
@@ -242,7 +242,7 @@ RepoViewer = {
   displayCommitDiff: function(commit) {
     RepoViewer.displayCommitDiffInfo(commit)
     if (commit.parents.length > 1) {
-      $("#diff-view-window").append("Multiple parents.")
+      $("#diff").append("Multiple parents.")
     }
     else {
       RepoViewer.displayCommitDiffDiff(commit)

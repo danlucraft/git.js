@@ -55,18 +55,46 @@ table#main td {
   vertical-align: top;
 }
 
+#tree-view {
+  width: 100%;
+  height: 100%;
+}
+
+#top-directory {
+  overflow: scroll;
+  width: 25%;
+  height: 100%;
+  float:left;
+}
+
+#top-directory ul {
+  margin: 0;
+  padding: 0;
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+#top-directory li {
+  margin: 0;
+  padding: 0;
+  padding-left: 10px;
+  list-style-type: none;
+}
+
+#file-main {
+  width: 75%;
+  height: 100%;
+  float:left;
+}
 
 #file-view {
   overflow: scroll;
-  width: 800px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   font-size: 0.8em;
 }
 
 #file-view .syntaxhighlighter {
-  overflow: scroll;
-  width: 800px !important;
-  height: 400px;
 }
 
 #view-select a {
@@ -84,12 +112,6 @@ table#main td {
   padding: 0;
   list-style-type: none;
   margin-top: 10px;
-}
-
-#top-directory {
-  overflow: scroll;
-  width: 250px;
-  height: 400px;
 }
 
 #jsgit-errors { 
@@ -118,7 +140,6 @@ table#main td {
 
 #diff-view {
   height: 100%;
-  padding: 10px;
 }
 
 #diff-view-window {
@@ -126,6 +147,10 @@ table#main td {
   width: 100%;
   height: 100%;
   font-size: 0.8em;
+}
+
+#diff-view-window #diff {
+  padding: 10px;
 }
 
 #diff-view-window .gravatar {
