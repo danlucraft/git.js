@@ -6,6 +6,19 @@ body {
   padding: 0;
 }
 
+.outer {
+  width: 100%;
+  height: 100%;
+}
+
+.top {
+  height: 260px;
+}
+
+.bottom {
+  height: 200px;
+}
+
 .header {
   width: 100%;
   background-color: #556;
@@ -81,19 +94,31 @@ table#main td {
 
 #commits {
   overflow: scroll;
-  width: 1100px;
-  height: 200px;
+  width: 100%;
+  height: 100%;
   font-size: 0.8em;
+}
+
+#commits table {
+  width: 100%;
+}
+
+#commits table .commit {
+  width: 70%;
 }
 
 #commits .displayed {
   background-color: #ddf;
 }
 
+#diff-view {
+  height: 100%;
+}
+
 #diff-view-window {
   overflow: scroll;
-  width: 1100px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
   font-size: 0.8em;
 }
 

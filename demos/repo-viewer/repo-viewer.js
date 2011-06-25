@@ -267,7 +267,7 @@ RepoViewer = {
   displayCommit: function(commit) {
     if ($("#commit-" + commit.sha).length == 0) {
       var row = "<tr>"
-      row += "<td class=\"commit\" id=\"commit-" + commit.sha + "\">" + commit.message + "</td>"
+      row += "<td class=\"commit\" id=\"commit-" + commit.sha + "\">" + commit.message.split("\n")[0] + "</td>"
       row += "<td>" + commit.author.name  + "</td>"
       
       row += "<td>" + commit.author.date.toUTCString() + "</td>"
