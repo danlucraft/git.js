@@ -252,8 +252,8 @@ RepoViewer = {
   attachMoreCommitsEvents: function() {
     $(".more-commits").click(function(e) {
       e.preventDefault()
-      $(e.target).parent().parent().remove()
-      var id = $(e.target).attr("id")
+      $(e.target).parent().parent().parent().remove()
+      var id = $(e.target).parent().attr("id")
       if (id.split("-")[0] == "more") {
         var sha = id.split("-")[1]
         var commit = RepoViewer.repo.getObject(sha)
@@ -280,7 +280,7 @@ RepoViewer = {
     this.displayCommit(commit)
     if (max == 0) {
       this.attachCommitClickEvents()
-      var row = "<tr><td><a class='more-commits' id='more-" + commit.sha + "'>More...</a></td></tr>"
+      var row = "<tr><td><a class='more-commits' id='more-" + commit.sha + "'><em>More...</em></a></td></tr>"
       $("#commits table").append(row)
       this.attachMoreCommitsEvents()
       if (callback) { callback() }
