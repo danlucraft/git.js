@@ -1,6 +1,6 @@
 
 body {
-  font-family: "Helvetica";
+  font-family: "Helvetica", "Verdana", "Arial";
   overflow: hidden;
   margin: 0;
   padding: 0;
@@ -35,12 +35,23 @@ body {
 
 .main-title {
   color: #EEE;
-  padding-left: 10px;
+  margin-top: -20px;
+  font-size: 26px;
+  padding-left: 20px;
   padding-right: 30px;
 }
 
 .repo-controls {
   padding-top: 10px;
+  color: #EEE;
+  font-size: 0.7em;
+}
+
+.repo-controls .field-description {
+  width: 100px;
+  text-align: right;
+  padding-top: 5px;
+  padding-right: 5px;
 }
 
 .header div.detail-view-controls {
