@@ -14,32 +14,30 @@
     <link rel="stylesheet" href="/vendor/syntaxhighlighter_3.0.83/styles/shThemeDefault.css" type="text/css" media="screen" />
   </head>
   <body>
-    <table class="controls">
-      <tr>
-        <td>
-          <h3 class="main-title">Git.JS</h3>
-        </td>
-        <td>
-          <form id="arbitrary-repo">
-            <input type="text" class="arbitrary-uri" value="http://localhost:9292/git.js" size="50">
-            <input type="submit" value="Clone" id="">
-          </form>
-          <form id="refs">
-            <select name="refs" id="refs-list">
-              <option value=""></option>
-            </select>
-          </form>
-        </td>
-        <td>
-          <div id="jsgit-errors"></div>
-          <div>
-            <a id="tree-view-select">Tree</a>
-            /
-            <a id="diff-view-select">Diff</a>
-          </div>
-        </td>
-      </tr>
-    </table>
+    <div class="header">
+      <div class="main-title">
+        <h3>git.js</h3>
+      </div>
+      <div class="repo-controls">
+        <form id="arbitrary-repo">
+          <input type="text" class="arbitrary-uri" value="http://localhost:9292/git.js" size="50">
+          <input type="submit" value="Clone" id="">
+        </form>
+        <form id="refs">
+          <select name="refs" id="refs-list">
+            <option value=""></option>
+          </select>
+        </form>
+      </div>
+      <div class="detail-view-controls">
+        <div id="jsgit-errors"></div>
+        <div>
+          <a id="tree-view-select">Tree</a>
+          /
+          <a id="diff-view-select">Diff</a>
+        </div>
+      </div>
+    </div>
     <table id="main">
       <tr>
         <td colspan="2">
