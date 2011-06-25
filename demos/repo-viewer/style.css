@@ -12,12 +12,14 @@ body {
 }
 
 .top {
-  height: 240px;
+  height: 300px;
+  margin: 0;
+  padding: 0;
 }
 
 .bottom {
   position:absolute;
-  top: 320px;
+  top: 300px;
   left: 0px;
   right: 0px;
   bottom: 0px;
@@ -27,6 +29,12 @@ body {
   width: 100%;
   background-color: #556;
   height: 60px;
+  margin: 0;
+}
+
+.header h3{
+  margin: 0;
+  padding: 0;
 }
 
 .header div {
@@ -35,7 +43,7 @@ body {
 
 .main-title {
   color: #EEE;
-  margin-top: -20px;
+  margin-top: 10px;
   font-size: 26px;
   padding-left: 20px;
   padding-right: 30px;
@@ -132,13 +140,15 @@ table#main td {
 #commits {
   overflow: scroll;
   width: 100%;
-  height: 100%;
+  height: 240px;
   font-size: 0.8em;
-  padding: 5px;
+  margin: 0;
+  padding: 0;
 }
 
 #commits table {
   width: 100%;
+  margin: 5px;
 }
 
 #commits table .commit {
