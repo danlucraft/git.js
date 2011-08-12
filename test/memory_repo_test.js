@@ -41,8 +41,12 @@ exports.MemoryRepo = {
     repo.makeAndAddObject("asdfasdf", "blob", "Hello World!")
     
     test.equals(repo.objectCount(), 1)
-    test.deepEqual(repo.getObject("asdfasdf").type, "blob")
-    test.deepEqual(repo.getObject("asdfasdf").data, "Hello World!")
+    repo.getObject("asdfasdf", function(err, obj) {
+      test.deepEqual(obj.type, "blob"); 
+    })
+    repo.getObject("asdfasdf", function(err, obj) {
+      test.deepEqual(obj.data, 'Hello World!');      
+    })
     test.done()
   }
 }

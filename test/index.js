@@ -15,7 +15,9 @@ merge(require('./pack_index_test'))
 merge(require('./remote_test'))
 merge(require('./smart_http_remote_test'))
 
+var trace = require('tracejs').trace;
 var assert = require('assert');
+var errors = [];
 
 var tests = Object.keys(exp).map(function(key) {
     return Object.keys(this[key]).map(function(test) {
@@ -25,15 +27,47 @@ var tests = Object.keys(exp).map(function(key) {
   return lhs.concat(rhs);
 }, []);
 
+var total = tests.length;
+var start = Date.now();
+
+var finish = function() {
+  process.stderr.write('\n');
+  var last = null;
+  errors.forEach(function(error) {
+    var name  = error[0]
+      , err   = error[1];
+
+    if(last !== name) {
+      console.error(' in '+name+':');
+      last = name;
+    }
+
+    var stack = trace(err);
+    process.stderr.write('\t'+err+'\n');
+    stack.frames.forEach(function(frame) {
+      if(frame) {
+        process.stderr.write(frame.filename.replace(process.cwd(), '.')+' on line '+frame.line+' \n')
+        process.stderr.write(frame.get_lines(1,1).replace(/\n/g, '\t\n')+'\n')
+      }
+    });
+  });
+
+  process.stderr.write('\n('+(total-errors.length)+' / '+total+') in '+(Date.now() - start)+'ms\n');
+  return process.exit(errors.length)
+};
 
 var recurse = function() {
   if(!tests.length)
-    return;
+    return finish();
   else {
+    var next = tests.shift()
+      , name = next[0]
+      , test = next[1];
     try {
-      tests.shift()[1]()
+      test()
     } catch(err) {
-      process.stderr.write('F');
+      process.stderr.write('F')
+      errors.push([name, err])
       recurse()
     }
   }
@@ -45,4 +79,4 @@ assert.done = function() {
   recurse();
 };
 
-recurse()
+return recurse()
