@@ -1,20 +1,21 @@
-require('../lib/git-server')
+var MemoryRepo = require('../lib/git/memory_repo')
+  , GithubProxyRepo = require('../lib/git/github_repo')
 
 exports.MemoryRepo = { 
   testCreate: function(test) {
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     test.done()
   },
   
   testEmpty: function(test) {
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     test.equal(repo.getRefs().length, 0)
     test.equal(repo.getRemotes().length, 0)
     test.done()
   },
   
   testAddRef: function(test) {
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     test.deepEqual(repo.getRefs(), [])
     
     repo.addRef("refs/heads/master", "yurrffff")
@@ -24,7 +25,7 @@ exports.MemoryRepo = {
   },
   
   testAddRemote: function(test) {
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     test.deepEqual(repo.getRemotes(), [])
     
     repo.addRemote("origin", "http://www.yahoo.com/")
@@ -35,7 +36,7 @@ exports.MemoryRepo = {
   },
   
   testMakeAndAddObject: function(test) {
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     test.deepEqual(repo.objectCount(), 0)
     
     repo.makeAndAddObject("asdfasdf", "blob", "Hello World!")
@@ -52,7 +53,7 @@ exports.MemoryRepo = {
 }
 
 var createTestRepo = function() {
-  return new Git.GithubProxyRepo("danlucraft", "clojure-dojo", "foopw") 
+  return new GithubProxyRepo("danlucraft", "clojure-dojo", "foopw") 
 }
 
 exports.GithubProxyRepo = {

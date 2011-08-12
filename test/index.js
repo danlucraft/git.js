@@ -4,11 +4,13 @@ var merge = function(what) {
     exp[key] = what[key]
   })
 }
+
 merge(require('./delta_test'))
 merge(require('./diff_test'))
+merge(require('./memory_repo_test'))
+
 merge(require('./http_remote_test'))
 merge(require('./jsgit_test'))
-merge(require('./memory_repo_test'))
 merge(require('./object_test'))
 merge(require('./pack_file_test'))
 merge(require('./pack_index_test'))
@@ -38,12 +40,12 @@ var finish = function() {
       , err   = error[1];
 
     if(last !== name) {
-      console.error(' in '+name+':');
+      console.error('\n\n in '+name+':\n--------------------------------');
       last = name;
     }
 
     var stack = trace(err);
-    process.stderr.write('\t'+err+'\n');
+    process.stderr.write(err+'\n');
     stack.frames.forEach(function(frame) {
       if(frame) {
         process.stderr.write(frame.filename.replace(process.cwd(), '.')+' on line '+frame.line+' \n')
