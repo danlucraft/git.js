@@ -8,6 +8,7 @@
         "test" : "test"
     },
     "dependencies" : {
+        "underscore":"1.X.X"
     },
     "devDependencies" : {
         "tracejs" : "0.X.X"
