@@ -1,4 +1,5 @@
-require('../../lib/git-server')
+var Repo = require('../../lib/git/repo')
+  , LogCommand = require('../../lib/git/commands/log-command')
 
 var path = require('path')
 
@@ -20,8 +21,8 @@ describe("git log", function() {
   }
 
   beforeEach(function () {
-    looseRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
-    packedRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
+    looseRepo = new Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    packedRepo = new Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
   })
   
   var expectLogOutput = 
@@ -44,7 +45,7 @@ describe("git log", function() {
     "Add sample files"
         
   it("should show a list of branches, with the current highlighted (loose)", function() {
-    var cmd = new Git.commands.LogCommand(looseRepo, [])
+    var cmd = new LogCommand(looseRepo, [])
   
     expectOutput(cmd, function(output) {
       expect(output).toEqual(expectLogOutput)
@@ -52,7 +53,7 @@ describe("git log", function() {
   })
 
   it("should show a list of branches, with the current highlighted (packed)", function() {
-    var cmd = new Git.commands.LogCommand(packedRepo, [])
+    var cmd = new LogCommand(packedRepo, [])
   
     expectOutput(cmd, function(output) {
       expect(output).toEqual(expectLogOutput)
