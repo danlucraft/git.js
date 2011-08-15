@@ -1,4 +1,10 @@
+var MemoryRepo = Git.require('lib/git/memory_repo')
+  , GithubProxyRepo = Git.require('lib/git/github_repo')
+  , TreeDiff = Git.require('lib/git/tree-diff')
+  , _ = Git.require('underscore')
+  , MyMD5 = Git.require('vendor/md5')
 
+console.log(MyMD5)
 RepoViewer = {
   repo: null,
   
@@ -72,7 +78,7 @@ RepoViewer = {
   displayCommitDiffDiff: function(commit) {
     RepoViewer.repo.getObject(commit.parents[0], function(err, parent) {
       var parentTree = parent ? parent.tree : null
-      var treeDiff = new Git.TreeDiff(RepoViewer.repo, parentTree, commit.tree)
+      var treeDiff = new TreeDiff(RepoViewer.repo, parentTree, commit.tree)
       treeDiff.toHtml(function(html) {
         $("#diff").append(html)
       })
@@ -212,7 +218,7 @@ RepoViewer = {
   },
   
   githubDemo: function(username, reponame, password) {
-    RepoViewer.repo = new Git.GithubProxyRepo(username, reponame, password)
+    RepoViewer.repo = new GithubProxyRepo(username, reponame, password)
     var origin = RepoViewer.repo.getRemote("origin")
     origin.fetchRefs(function() {
       RepoViewer.displayRefs(RepoViewer.repo.getAllRefs())
@@ -229,7 +235,7 @@ RepoViewer = {
     RepoViewer.clearRefs()
     RepoViewer.clearCommits()
     RepoViewer.clearErrors()
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     RepoViewer.repo = repo
     console.log("creating repo with origin: " + uri)
     // if (uri.indexOf("//github.com")) {
