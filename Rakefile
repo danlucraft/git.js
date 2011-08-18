@@ -1,6 +1,4 @@
 
-
-
 namespace :test do
   desc "Reset the github test repo"
   task :reset do
@@ -101,6 +99,7 @@ task :package_client do
   end 
 
   total_js = js.join("\n\n")
+  FileUtils.mkdir_p("build")
   File.open("build/git.min.js", "w") {|f| f.puts total_js }
   puts "packaged build/git.min.js"
 end
