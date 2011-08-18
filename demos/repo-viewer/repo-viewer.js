@@ -4,7 +4,6 @@ var MemoryRepo = Git.require('lib/git/memory_repo')
   , _ = Git.require('underscore')
   , MyMD5 = Git.require('vendor/md5')
 
-console.log(MyMD5)
 RepoViewer = {
   repo: null,
   
