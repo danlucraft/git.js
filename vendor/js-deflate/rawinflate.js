@@ -744,9 +744,8 @@ var zip_inflate = function(str) {
         aout[aout.length] = cbuf.join("");
     }
     zip_inflate_data = null; // G.C.
-    var result = new String(aout.join(""));
-    result.compressedLength = zip_inflate_pos;
-    return result;
+    var result = aout.join('')
+    return [result, zip_inflate_pos];
 }
 module.exports = zip_inflate;
 module.exports.source = arguments.callee.toString();
