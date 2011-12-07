@@ -312,11 +312,22 @@ var zip_HuftBuild = function(b,	// code lengths in bits (all assumed <= BMAX)
 
 /* routines (inflate) */
 
-var zip_GET_BYTE = function() {
+var zip_GET_BYTE;
+
+/** Interpret zip_inflate_data as a string containing 8-bit bytes.*/
+var zip_get_byte_from_string = function() {
     if(zip_inflate_data.length == zip_inflate_pos)
 	return -1;
     return zip_inflate_data.charCodeAt(zip_inflate_pos++) & 0xff;
-}
+};
+/** Interpret zip_inflate_data as an array of uint8 numbers (0 <= c <= 255). */
+var zip_get_byte_from_int_array = function() {
+    if(zip_inflate_data.length == zip_inflate_pos)
+	return -1;
+    return zip_inflate_data[zip_inflate_pos++] & 0xff;
+};
+
+
 
 var zip_NEEDBITS = function(n) {
     while(zip_bit_len < n) {
@@ -727,13 +738,9 @@ var zip_inflate_internal = function(buff, off, size) {
     return n;
 }
 
-var zip_inflate = function(str) {
+var zip_inflate_loop = function() {
     var i, j;
-    
-    zip_inflate_start();
-    zip_inflate_data = str;
-    zip_inflate_pos = 0;
-
+    var pos_begin = zip_inflate_pos;
     var buff = new Array(1024);
     var aout = [];
     while((i = zip_inflate_internal(buff, 0, buff.length)) > 0) {
@@ -745,9 +752,27 @@ var zip_inflate = function(str) {
     }
     zip_inflate_data = null; // G.C.
     var result = aout.join('')
-    return [result, zip_inflate_pos];
+    return [result, zip_inflate_pos - pos_begin];
 }
-module.exports = zip_inflate;
-module.exports.source = arguments.callee.toString();
+
+var zip_inflate = function(str, offset) {
+    zip_inflate_start();
+    zip_GET_BYTE = zip_get_byte_from_string;
+    zip_inflate_data = str;
+    zip_inflate_pos = offset || 0;
+    return zip_inflate_loop();
+};
+var zip_inflate_array_of_uint8 = function(array, offset) {
+    zip_inflate_start();
+    zip_GET_BYTE = zip_get_byte_from_int_array;
+    zip_inflate_data = array;
+    zip_inflate_pos = offset || 0;
+    return zip_inflate_loop();
+};
+module.exports = {
+    zip_inflate: zip_inflate,
+    zip_inflate_array_of_uint8: zip_inflate_array_of_uint8,
+    source: arguments.callee.toString()
+};
 
 })();
