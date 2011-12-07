@@ -36,15 +36,17 @@ exports.HttpRemote = {
   },
 
   testParseObjectData: function(test) {
-    var commit = HttpRemote.parseObjectData("123", utils.bytesToString(REMOTE_TEST_DATA.commitObjectData.data))
-    test.equals(commit.type, "commit")
-    test.equals(commit.sha, "123")
-    test.equals(commit.tree, "c6b93605bd1e2171b3094f70cf61133b8f749bda")
-    test.deepEqual(commit.parents, ["0045cb644ca58857cc9fd981262c628abdcc415a"])
-    test.equals(commit.author.name, "Sabrina Leandro")
-    test.equals(commit.committer.name, "Sabrina Leandro")
-    test.equals(commit.message, "Fixing appender mq in features")
-    test.done()
+    HttpRemote.parseObjectData("123", utils.bytesToString(REMOTE_TEST_DATA.commitObjectData.data), function(err, commit) {
+      if (err) throw err;
+      test.equals(commit.type, "commit")
+      test.equals(commit.sha, "123")
+      test.equals(commit.tree, "c6b93605bd1e2171b3094f70cf61133b8f749bda")
+      test.deepEqual(commit.parents, ["0045cb644ca58857cc9fd981262c628abdcc415a"])
+      test.equals(commit.author.name, "Sabrina Leandro")
+      test.equals(commit.committer.name, "Sabrina Leandro")
+      test.equals(commit.message, "Fixing appender mq in features")
+      test.done()
+    });
   },
   
   testParsePackList: function(test) {

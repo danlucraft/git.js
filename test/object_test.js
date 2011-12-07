@@ -1,5 +1,7 @@
 var Objects = require('../lib/git/objects')
   , utils = require('../lib/git/utils')
+  ;
+require('../lib/string_helpers');
 
 exports.Blob = {
   "has basic data": function(test) {

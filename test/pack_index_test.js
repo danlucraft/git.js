@@ -4,7 +4,7 @@ var utils = require('../lib/git/utils')
 var fs = require('fs')
 
 var fixturePackIndex = function() {
-  var arr = eval(fs.readFileSync("test/fixtures/pack_index.json").toString('binary'))
+  var arr = eval(fs.readFileSync(__dirname + "/fixtures/pack_index.json").toString('binary'))
   return utils.bytesToString(arr)
 }
 
