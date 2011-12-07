@@ -76,6 +76,7 @@ RepoViewer = {
   
   displayCommitDiffDiff: function(commit) {
     RepoViewer.repo.getObject(commit.parents[0], function(err, parent) {
+      if (err) throw err;
       var parentTree = parent ? parent.tree : null
       var treeDiff = new TreeDiff(RepoViewer.repo, parentTree, commit.tree)
       treeDiff.toHtml(function(html) {
