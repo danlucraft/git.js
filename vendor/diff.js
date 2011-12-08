@@ -22,7 +22,104 @@
 // SOFTWARE.
 var Diff;
 module.exports = Diff = {
+    // Helper function to the Myers diff algorithm. It calculates a list
+    // of Vf. Returns an array of x vales.
+    // TODO: implement the backward search as well to improve performance.
+    _calculate_vs: function(file1, file2) {
+      var N = file1.length, M = file2.length, dmax = N + M + 1; //  >> 1;
+      
+      // After iteration d, Vf[(d + k) / 2] is the farthest (highest x) that
+      // can be reached along the diagonal y = x - k at cost d.
+      // Starting at (0,0), you can reach an adjacent line
+      // (either y = x - k-1, or y = x - k+1), then step 1 unit
+      // in x or y onto the diagonal, then take zero or more
+      // cost-free diagonal steps down to (Vf[(d+k)/2], V[(d+k)/2]-k).
+      // Note that when you're at iteration d and looking at the previous array
+      // Vfprev, you have to use indices Vfprev[(d-1 + k)/2] to retrieve
+      // the same k diagonal, since Vfprev is a shorter array
+      // with k=0 as its center.
+      var Vfs = [];
+      var Vfprev = [0];
+      for (var d = 0; d <= dmax; d++) {
+        var Vf = new Array(d + 1);
+        var finished = false;
+        for (var k = -d; k <= d; k += 2) {
+          // How do I get to y = x - k?
+          // down means we advance y but not x (from y = x - k - 1)
+          // !down means we advance x but not y (from y = x - k + 1)
+          var down = k === -d || k !== d && Vfprev[(d-1 + k-1)/2] < Vfprev[(d-1 + k+1)/2];
+          var kPrev = down ? k + 1 : k - 1;
+          // start point
+          var xStart = Vfprev[(d-1 + kPrev)/2], yStart = xStart - kPrev;
+          // bend point
+          var xMid = down ? xStart : xStart + 1, yMid = xMid - k;
+          // end point
+          var xEnd = xMid, yEnd = yMid;
+          while (xEnd < N && yEnd < M && file1[xEnd] === file2[yEnd]) {
+            xEnd++; yEnd++;
+          }
+          // Save the end point
+          Vf[(d + k)/2] = xEnd;
+          if (xEnd >= N && yEnd >= M) {
+            finished = true;
+            break;
+          }
+        }
+        Vfs.push(Vf);
+        Vfprev = Vf;
+        if (finished)
+          break;
+      }
+      return Vfs;
+    },
+    // This is the O((N + M)d) time and O(d^2) space diff algorithm
+    // by Gene Myers (1986). See the tutorial
+    // http://www.codeproject.com/KB/recipes/DiffTutorial_1.aspx
+    // TODO: implement searching backward--see part 2 of the tutorial.
+    // @param file1, file2: array of lines
+    // @return candidate {file1index: int, file2index: int, chain: candidate}
+    // for each index 
     longest_common_subsequence: function(file1, file2) {
+      var N = file1.length, M = file2.length, dmax = N + M + 1; //  >> 1;
+      var Vfs = Diff._calculate_vs(file1, file2);
+      var candidates = [];
+      for (var d = Vfs.length - 1, x = N, y = M; x > 0 || y > 0; d--) {
+        var Vf = Vfs[d];  // add d to center on the middle diagonal
+        var k = x - y;
+        // end point is in Vf
+        var xEnd = Vf[(d + k)/2];
+        var yEnd = x - k;
+        // down or right?
+        var Vfprev = Vfs[d - 1] || [0];
+        var down = k === -d || k !== d && Vfprev[(d-1 + k - 1)/2] < Vfprev[(d-1 + k + 1)/2];
+        var kPrev = down ? k + 1 : k - 1;
+        // start point
+        var xStart = Vfprev[(d-1 + kPrev)/2]
+          , yStart = xStart - kPrev;
+        // bend point
+        var xMid = down ? xStart : xStart + 1
+          , yMid = xMid - k;
+        if (xEnd !== xMid) {
+          for (x = xEnd - 1; x >= xMid; x--) {
+            y = x - k;
+            candidates.push({file1index: x, file2index: y, chain: null});
+          }
+        }
+        x = xStart;
+        y = yStart;
+      }
+      // Return a candidate linked list in the same format as the previous
+      // algorithm returned.
+      var candidate = {file1index: -1, file2index: -1, chain: null};
+      for (var i = candidates.length - 1; i >= 0; i--) {
+        candidates[i].chain = candidate;
+        candidate = candidates[i];
+      }
+      return candidate;
+    },
+    // @param file1, file2: array of lines
+    // @return candidate {file1index: int, file2index: int, chain: candidate}
+    longest_common_subsequence_slow: function(file1, file2) {
         /* Text diff algorithm following Hunt and McIlroy 1976.
          * J. W. Hunt and M. D. McIlroy, An algorithm for differential file
          * comparison, Bell Telephone Laboratories CSTR #41 (1976)
@@ -144,6 +241,7 @@ module.exports = Diff = {
         return result;
     },
 
+    // file1 and file2 are arrays of lines.
     diff_patch: function(file1, file2) {
         // We apply the LCD to build a JSON representation of a
         // diff(1)-style patch.

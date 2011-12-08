@@ -1,4 +1,5 @@
 var FileDiff = require('../lib/git/file-diff')
+  , Diff = require('../vendor/diff')
 
 exports.NullEndpoints = {
   "null start": function(test) {
@@ -343,4 +344,33 @@ exports.MultipleConnectedHunks = {
   },
 }
 
-
+// Test the internal method _calculate_vs, and compare results to the slow
+// diff algorithm.
+exports.MyersDiff = {
+  "Vs: streq": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "c", "d"];
+    var Vfs = Diff._calculate_vs(file1, file2);
+    test.deepEqual([[4]], Vfs);
+    test.done();
+  },
+  "vs": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "e", "d"];
+    var Vfs = Diff._calculate_vs(file1, file2);
+    test.deepEqual([[2], [2,3], [2, 4]], Vfs);
+    test.done();
+  },
+  "same result as slow: streq": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "c", "d"];
+    var seq = Diff.longest_common_subsequence(file1, file2);
+    var seqorig = Diff.longest_common_subsequence_slow(file1, file2);
+    test.deepEqual(seqorig, seq);
+    test.done();
+  },
+  "same result as slow": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "e", "d"];
+    var seq = Diff.longest_common_subsequence(file1, file2);
+    var seqorig = Diff.longest_common_subsequence_slow(file1, file2);
+    test.deepEqual(seqorig, seq);
+    test.done();
+  }
+};
