@@ -1,4 +1,4 @@
-require('../lib/git-server')
+var applyDelta = require('../lib/git/delta')
 
 DeltaTestData = {
   withCopyHunk: {
@@ -16,7 +16,7 @@ DeltaTestData = {
 exports['Apply Delta'] = {
   "Delta with copy hunk": function(test) {
     test.equals(
-      Git.applyDelta(DeltaTestData.withCopyHunk.baseData, DeltaTestData.withCopyHunk.delta),
+      applyDelta(DeltaTestData.withCopyHunk.baseData, DeltaTestData.withCopyHunk.delta),
       DeltaTestData.withCopyHunk.expectedResult
     )
     test.done()
@@ -24,7 +24,7 @@ exports['Apply Delta'] = {
   
   "Delta with many hunks": function(test) {
     test.equals(
-        Git.applyDelta(DeltaTestData.withManyHunks.baseData, DeltaTestData.withManyHunks.delta),
+        applyDelta(DeltaTestData.withManyHunks.baseData, DeltaTestData.withManyHunks.delta),
         DeltaTestData.withManyHunks.expectedResult)
     test.done()
   }

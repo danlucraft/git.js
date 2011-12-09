@@ -1,4 +1,5 @@
-require('../../lib/git-server')
+var Repo = require('../../lib/git/repo')
+  , DiffCommand = require('../../lib/git/commands/diff-command')
 
 var path = require('path')
 
@@ -7,8 +8,8 @@ describe("git diff", function() {
   var packedRepo
 
   beforeEach(function () {
-    looseRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
-    packedRepo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
+    looseRepo = new Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    packedRepo = new Repo(path.join(__dirname, "../../test/fixtures/test-repo1-packed/.git"))
   })
   
   var expectOutput = function(cmd, cb) {
@@ -42,7 +43,7 @@ describe("git diff", function() {
     " 1 files changed, 1 insertions(+), 1 deletions(-)"
    
   it("diff stats two commits (loose)", function() {
-    var cmd = new Git.commands.DiffCommand(looseRepo, ["d0a9e5b650718445b53cd1cab40d21fb3891c98a", "9f00c2ee854534a785ff01115a94a50c9961610d"], ["--stat"])
+    var cmd = new DiffCommand(looseRepo, ["d0a9e5b650718445b53cd1cab40d21fb3891c98a", "9f00c2ee854534a785ff01115a94a50c9961610d"], ["--stat"])
     
     expectOutput(cmd, function(output) {
       expect(output).toEqual(expectedStatOutput)
@@ -50,7 +51,7 @@ describe("git diff", function() {
   })
   
   // it("diffs two commits (loose)", function() {
-  //   var cmd = new Git.commands.DiffCommand(looseRepo, ["d0a9e5b650718445b53cd1cab40d21fb3891c98a", "9f00c2ee854534a785ff01115a94a50c9961610d"])
+  //   var cmd = new commands.DiffCommand(looseRepo, ["d0a9e5b650718445b53cd1cab40d21fb3891c98a", "9f00c2ee854534a785ff01115a94a50c9961610d"])
   //   
   //   expectOutput(cmd, function(output) {
   //     expect(output).toEqual(expectedOutput)

@@ -1,5 +1,4 @@
-
-require('../lib/git-server')
+var SmartHttpRemote = require('../lib/git/smart_http_remote')
 
 SMART_HTTP_REMOTE_TEST_DATA = {
   discovery: {
@@ -17,7 +16,7 @@ SMART_HTTP_REMOTE_TEST_DATA = {
 exports.SmartHttpRemoteTest = {
   parseDiscovery: function(test) {
     test.deepEqual(
-      Git.SmartHttpRemote.parseDiscovery(SMART_HTTP_REMOTE_TEST_DATA.discovery.data), 
+      SmartHttpRemote.parseDiscovery(SMART_HTTP_REMOTE_TEST_DATA.discovery.data), 
       SMART_HTTP_REMOTE_TEST_DATA.discovery.result, 
       "Decodes the capabilities and refs from the discovery response.")
     test.done()

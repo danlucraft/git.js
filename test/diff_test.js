@@ -1,11 +1,11 @@
-
-require('../lib/git-server')
+var FileDiff = require('../lib/git/file-diff')
+  , Diff = require('../vendor/diff')
 
 exports.NullEndpoints = {
   "null start": function(test) {
     var file1 = ""
     var file2 = ["a", "b", "c"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 1, 
@@ -19,7 +19,7 @@ exports.NullEndpoints = {
   "null end": function(test) {
     var file1 = ["a", "b", "c"].join("\n")
     var file2 = ""
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 1, 
@@ -36,7 +36,7 @@ exports.SingleHunk = {
   "additions at end": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "c", "d", "e", "f", "g", "h"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 7, 
@@ -53,7 +53,7 @@ exports.SingleHunk = {
   "additions at beginning": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["0", "1", "a", "b", "c", "d", "e", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 1, 
@@ -70,7 +70,7 @@ exports.SingleHunk = {
   "additions in middle": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "c", "0", "1", "d", "e", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 4, 
@@ -90,7 +90,7 @@ exports.SingleHunk = {
   "removals at end": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "c", "d"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 5, 
@@ -107,7 +107,7 @@ exports.SingleHunk = {
   "removals at beginning": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["c", "d", "e", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 1, 
@@ -124,7 +124,7 @@ exports.SingleHunk = {
   "removals in middle": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "e", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 3, 
@@ -142,7 +142,7 @@ exports.SingleHunk = {
   "added and removed in middle of same length": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "0", "1", "e", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 3, 
@@ -162,7 +162,7 @@ exports.SingleHunk = {
   "more added than removed": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "0", "1", "2", "3", "e", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 3, 
@@ -184,7 +184,7 @@ exports.SingleHunk = {
   "more removed than added": function(test) {
     var file1 = ["a", "b", "c", "d", "e", "f"].join("\n")
     var file2 = ["a", "b", "0", "1", "f"].join("\n")
-    var diff = new Git.Diff(file1, file2)
+    var diff = new FileDiff(file1, file2)
     test.deepEqual(
       diff.info, 
       [{offset: 3, 
@@ -206,7 +206,7 @@ exports.MultipleSeparateHunks = {
   "added then added": function(test) {
     var file1 = "123456789".split("").join("\n")
     var file2 = "123xy4567zq89".split("").join("\n")
-    var diff = new Git.Diff(file1, file2, {context: 1})
+    var diff = new FileDiff(file1, file2, {context: 1})
     test.deepEqual(
       diff.info[0], 
       {offset: 4, 
@@ -231,7 +231,7 @@ exports.MultipleSeparateHunks = {
   "removed then removed": function(test) {
     var file1 = "123456789".split("").join("\n")
     var file2 = "1345689".split("").join("\n")
-    var diff = new Git.Diff(file1, file2, {context: 1})
+    var diff = new FileDiff(file1, file2, {context: 1})
     test.deepEqual(
       diff.info[0], 
       {offset: 2, 
@@ -254,7 +254,7 @@ exports.MultipleSeparateHunks = {
   "added then removed": function(test) {
     var file1 = "123456789".split("").join("\n")
     var file2 = "123xy45689".split("").join("\n")
-    var diff = new Git.Diff(file1, file2, {context: 1})
+    var diff = new FileDiff(file1, file2, {context: 1})
     test.deepEqual(
       diff.info[0], 
       {offset: 4, 
@@ -278,7 +278,7 @@ exports.MultipleSeparateHunks = {
   "removed then added": function(test) {
     var file1 = "123456789".split("").join("\n")
     var file2 = "134567xq89".split("").join("\n")
-    var diff = new Git.Diff(file1, file2, {context: 1})
+    var diff = new FileDiff(file1, file2, {context: 1})
     test.deepEqual(
       diff.info[0], 
       {offset: 2, 
@@ -304,7 +304,7 @@ exports.MultipleConnectedHunks = {
   "overlap by 1": function(test) {
     var file1 = "123456789".split("").join("\n")
     var file2 = "123xy4zq56789".split("").join("\n")
-    var diff = new Git.Diff(file1, file2, {context: 1})
+    var diff = new FileDiff(file1, file2, {context: 1})
     test.equal(diff.info.length, 1)
     test.deepEqual(
       diff.info[0], 
@@ -324,7 +324,7 @@ exports.MultipleConnectedHunks = {
   "overlap by 2": function(test) {
     var file1 = "123456789".split("").join("\n")
     var file2 = "123xy4zq56789".split("").join("\n")
-    var diff = new Git.Diff(file1, file2, {context: 2})
+    var diff = new FileDiff(file1, file2, {context: 2})
     test.equal(diff.info.length, 1)
     test.deepEqual(
       diff.info[0], 
@@ -344,4 +344,33 @@ exports.MultipleConnectedHunks = {
   },
 }
 
-
+// Test the internal method _calculate_vs, and compare results to the slow
+// diff algorithm.
+exports.MyersDiff = {
+  "Vs: streq": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "c", "d"];
+    var Vfs = Diff._calculate_vs(file1, file2);
+    test.deepEqual([[4]], Vfs);
+    test.done();
+  },
+  "vs": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "e", "d"];
+    var Vfs = Diff._calculate_vs(file1, file2);
+    test.deepEqual([[2], [2,3], [2, 4]], Vfs);
+    test.done();
+  },
+  "same result as slow: streq": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "c", "d"];
+    var seq = Diff.longest_common_subsequence(file1, file2);
+    var seqorig = Diff.longest_common_subsequence_slow(file1, file2);
+    test.deepEqual(seqorig, seq);
+    test.done();
+  },
+  "same result as slow": function(test) {
+    var file1 = ["a", "b", "c", "d"], file2 = ["a", "b", "e", "d"];
+    var seq = Diff.longest_common_subsequence(file1, file2);
+    var seqorig = Diff.longest_common_subsequence_slow(file1, file2);
+    test.deepEqual(seqorig, seq);
+    test.done();
+  }
+};

@@ -1,3 +1,8 @@
+var MemoryRepo = Git.require('lib/git/memory_repo')
+  , GithubProxyRepo = Git.require('lib/git/github_repo')
+  , TreeDiff = Git.require('lib/git/tree-diff')
+  , _ = Git.require('underscore')
+  , MyMD5 = Git.require('vendor/md5')
 
 RepoViewer = {
   repo: null,
@@ -28,7 +33,7 @@ RepoViewer = {
   },
   
   attachCommitClickEvents: function() {
-    $(".commit").click(function(e) {
+    function activated(e) {
       e.preventDefault()
       var id = $(e.target).attr("id")
       if (id.split("-")[0] == "commit") {
@@ -42,7 +47,10 @@ RepoViewer = {
         RepoViewer.highlightCommit(sha)
         RepoViewer.clearFileView()
       }
-    })
+    }
+    $(".commit").click(activated).keydown(function(e) {
+      if (13 === e.keyCode) activated(e);
+    });
   },
   
   displayCommitDiffInfo: function(commit) {
@@ -71,8 +79,9 @@ RepoViewer = {
   
   displayCommitDiffDiff: function(commit) {
     RepoViewer.repo.getObject(commit.parents[0], function(err, parent) {
+      if (err) throw err;
       var parentTree = parent ? parent.tree : null
-      var treeDiff = new Git.TreeDiff(RepoViewer.repo, parentTree, commit.tree)
+      var treeDiff = new TreeDiff(RepoViewer.repo, parentTree, commit.tree)
       treeDiff.toHtml(function(html) {
         $("#diff").append(html)
       })
@@ -90,10 +99,11 @@ RepoViewer = {
   },
   
   attachMoreCommitsEvents: function() {
-    $(".more-commits").click(function(e) {
+    function activated(e) {
       e.preventDefault()
-      $(e.target).parent().parent().parent().remove()
-      var id = $(e.target).parent().attr("id")
+      var id = $(e.target).closest('[id]').attr("id");
+      $(e.target).closest('tr').prev('tr').find('[tabindex]').focus()
+      $(e.target).closest('tr').remove();
       if (id.split("-")[0] == "more") {
         var sha = id.split("-")[1]
         RepoViewer.repo.getObject(sha, function(err, commit) {
@@ -102,13 +112,16 @@ RepoViewer = {
           })
         })
       }
-    })
+    }
+    $(".more-commits").click(activated).keydown(function(e) {
+      if (13 === e.keyCode) activated(e);
+    });
   },
   
   displayCommit: function(commit) {
     if ($("#commit-" + commit.sha).length == 0) {
       var row = "<tr>"
-      row += "<td class=\"commit\" id=\"commit-" + commit.sha + "\">" + commit.message.split("\n")[0] + "</td>"
+      row += "<td class=\"commit\" id=\"commit-" + commit.sha + "\" tabindex=0>" + commit.message.split("\n")[0] + "</td>"
       row += "<td>" + commit.author.name  + "</td>"
       
       row += "<td>" + commit.author.date.toUTCString() + "</td>"
@@ -121,7 +134,7 @@ RepoViewer = {
     this.displayCommit(commit)
     if (max == 0) {
       this.attachCommitClickEvents()
-      var row = "<tr><td><a class='more-commits' id='more-" + commit.sha + "'><em>More...</em></a></td></tr>"
+      var row = "<tr><td><a class='more-commits' id='more-" + commit.sha + "' tabindex=0><em>More...</em></a></td></tr>"
       $("#commits table").append(row)
       this.attachMoreCommitsEvents()
       if (callback) { callback() }
@@ -212,7 +225,7 @@ RepoViewer = {
   },
   
   githubDemo: function(username, reponame, password) {
-    RepoViewer.repo = new Git.GithubProxyRepo(username, reponame, password)
+    RepoViewer.repo = new GithubProxyRepo(username, reponame, password)
     var origin = RepoViewer.repo.getRemote("origin")
     origin.fetchRefs(function() {
       RepoViewer.displayRefs(RepoViewer.repo.getAllRefs())
@@ -229,7 +242,7 @@ RepoViewer = {
     RepoViewer.clearRefs()
     RepoViewer.clearCommits()
     RepoViewer.clearErrors()
-    var repo = new Git.MemoryRepo()
+    var repo = new MemoryRepo()
     RepoViewer.repo = repo
     console.log("creating repo with origin: " + uri)
     // if (uri.indexOf("//github.com")) {

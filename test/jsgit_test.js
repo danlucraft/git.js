@@ -1,7 +1,8 @@
 
 require('../lib/git-server')
-
-var myDebug = require('util').debug
+var UploadPackParser = require('../lib/git/upload_pack_parser')
+  , utils = require('../lib/git/utils')
+  , Pack = require('../lib/git/pack')
 
 GitTestData = {
   pack: [80, 65, 67, 75, 0, 0, 0, 2, 0, 0, 0, 5, 145, 12, 120, 156, 157, 204, 77, 10, 194, 48, 16, 64, 225, 125, 78, 49, 123, 65, 218, 252, 52, 9, 136, 40, 184, 244, 18, 99, 102, 130, 129, 164, 45, 233, 228, 254, 246, 12, 190, 229, 183, 120, 210, 153, 33, 89, 27, 173, 198, 232, 34, 6, 173, 209, 160, 15, 142, 201, 39, 139, 139, 11, 244, 137, 75, 156, 136, 102, 239, 20, 14, 249, 110, 29, 94, 184, 22, 174, 240, 30, 169, 99, 22, 184, 17, 174, 143, 92, 7, 175, 210, 145, 74, 194, 122, 77, 91, 187, 195, 172, 163, 177, 206, 122, 103, 224, 50, 157, 169, 83, 91, 17, 225, 255, 15, 234, 73, 4, 7, 182, 189, 50, 228, 82, 249, 80, 63, 157, 99, 59, 198, 160, 4, 120, 156, 51, 52, 48, 48, 51, 49, 81, 8, 114, 117, 116, 241, 117, 101, 248, 171, 37, 219, 177, 129, 183, 133, 241, 192, 132, 250, 195, 143, 46, 63, 138, 103, 220, 29, 244, 220, 196, 0, 8, 20, 114, 50, 147, 24, 214, 5, 138, 78, 123, 220, 119, 173, 244, 54, 27, 243, 66, 19, 63, 191, 87, 250, 146, 110, 38, 0, 237, 58, 24, 59, 181, 4, 120, 156, 11, 73, 45, 46, 81, 8, 74, 45, 200, 55, 228, 178, 133, 3, 46, 46, 175, 82, 160, 112, 162, 66, 9, 72, 182, 8, 40, 171, 144, 150, 95, 164, 80, 156, 159, 155, 90, 146, 145, 153, 151, 174, 224, 169, 158, 171, 80, 158, 95, 148, 13, 98, 231, 231, 113, 1, 0, 239, 156, 22, 95, 162, 2, 120, 156, 51, 52, 48, 48, 51, 49, 81, 72, 203, 207, 215, 203, 42, 102, 120, 186, 106, 253, 246, 114, 209, 200, 155, 183, 117, 111, 200, 7, 197, 60, 55, 232, 46, 47, 20, 0, 0, 214, 161, 13, 153, 190, 1, 120, 156, 211, 215, 87, 112, 204, 83, 72, 173, 72, 204, 45, 200, 73, 85, 240, 74, 44, 75, 12, 78, 46, 202, 44, 40, 81, 72, 203, 204, 73, 229, 2, 0, 150, 63, 10, 27, 112, 162, 38, 201, 64, 200, 237, 148, 228, 62, 53, 100, 240, 52, 119, 16, 115, 91, 161, 48, 48, 48, 54, 1, 154, 48, 48, 48, 48],
@@ -13,107 +14,106 @@ GitTestData = {
 
 exports['PackFileParser'] = {
   "master pack": function(test) {
-    myDebug("master pack")
-    test.deepEqual(new Git.Pack(GitTestData.pack).parseAll().getObjects(),
-    [ { sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
-      , type: "commit"
-      , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
-    }
-    , { sha: 'c44942a959a822a3a785ed7c4a658db9690dd175'
-      , type: "tree"
-      , data: '100644 README\u0000\u00fd*\u001d\u0088\u00b0\r\u0084\u0001\u00c0\u0090\177\u00c3\u00e2\u00d3\u00e2_\u0001\u00bbR\u00e740000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
-    }
-    , { sha: 'fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7'
-      , type: "blob"
-      , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n'
-    }
-    , { sha: 'ae511596e38ed675db0603a1344e4eea2f194634'
-      , type: "tree"
-      , data: '100644 foo.js\u0000\u00e5\u00aa\u00af\u00b7w\u0015Y\u00d9\u00db-\u00d8\u001fR\\\u00e70\u008bwq\u0010'
-    }
-    , { sha: 'e5aaafb7771559d9db2dd81f525ce7308b777110'
-      ,  type: "blob"
-      , data: '// An example JavaScript file\n'
-    }
-    ])
-    myDebug("master pack: done")
-    test.done()
-  },
-  "branch1 pack": function(test) {
-    myDebug("branch1 pack")
-    test.deepEqual(new Git.Pack(GitTestData.packBranch1).parseAll().getObjects(), 
-      [ { type: 'commit'
-        , sha: '9f82761f8982d751097a922933467b798ae0158d'
-        , data: 'tree 6341864dce4bc028f1ead9277261b98cecf6a4e5\nparent b3453be87b70a0c5dea28aacd49cf34ddb91a8c5\nauthor Daniel Lucraft <dan@fluentradical.com> 1293969635 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293969635 +0000\n\nAdded LICENSE and a branch note to the README\n'
-      }
-      , { type: 'commit'
-        , sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
+    var pack = new Pack(GitTestData.pack);
+    pack.parseAll(function(err) {
+      test.deepEqual(pack.getObjects(),
+      [ { sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
+        , type: "commit"
         , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
       }
-      , { type: 'tree'
-        , sha: '6341864dce4bc028f1ead9277261b98cecf6a4e5'
-        , data: '100644 LICENSE\u0000\u00b4\u00dcW\u00ad\u00d3\u00d6\u00ca\u00c06\u0082\u00c4I\u0091\u00f2w:\u00a6\u00c8X\u009d100644 README\u0000n\u000f2\u00d2\u0099\u00a8\u00df\u00d5\u00cb>\u00b3@\u00fba\u00fe\u00bb\u0001\u00d8t440000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
-      }
-      , { type: 'blob'
-        , sha: 'b4dc57add3d6cac03682c44991f2773aa6c8589d'
-        , data: 'Do what you want with it, no comebacks.\n'
-      }
-      , { type: 'blob'
-        , sha: '6e0f32d299a8dfd5cb3eb340fb61febb01d87434'
-        , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n\nThis branch (branch1) has a new file and a modified file!\n'
-      }
-      , { type: 'tree'
-        , sha: 'ae511596e38ed675db0603a1344e4eea2f194634'
-        , data: '100644 foo.js\u0000\u00e5\u00aa\u00af\u00b7w\u0015Y\u00d9\u00db-\u00d8\u001fR\\\u00e70\u008bwq\u0010'
-      }
-      , { type: 'blob'
-        , sha: 'e5aaafb7771559d9db2dd81f525ce7308b777110'
-        , data: '// An example JavaScript file\n'
-      }
-      , { type: 'tree'
-        , sha: 'c44942a959a822a3a785ed7c4a658db9690dd175'
+      , { sha: 'c44942a959a822a3a785ed7c4a658db9690dd175'
+        , type: "tree"
         , data: '100644 README\u0000\u00fd*\u001d\u0088\u00b0\r\u0084\u0001\u00c0\u0090\177\u00c3\u00e2\u00d3\u00e2_\u0001\u00bbR\u00e740000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
       }
-      , { type: 'blob'
-        , sha: 'fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7'
+      , { sha: 'fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7'
+        , type: "blob"
         , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n'
-        , fromDelta: 
-           { type: 'ofs_delta'
-           , data: [ 128, 1, 69, 144, 69 ]
-           , base: '6e0f32d299a8dfd5cb3eb340fb61febb01d87434'
-        }
       }
-      ]
-    )
-    myDebug("branch1 pack: done")
-    test.done()
+      , { sha: 'ae511596e38ed675db0603a1344e4eea2f194634'
+        , type: "tree"
+        , data: '100644 foo.js\u0000\u00e5\u00aa\u00af\u00b7w\u0015Y\u00d9\u00db-\u00d8\u001fR\\\u00e70\u008bwq\u0010'
+      }
+      , { sha: 'e5aaafb7771559d9db2dd81f525ce7308b777110'
+        ,  type: "blob"
+        , data: '// An example JavaScript file\n'
+      }
+      ])
+      test.done()
+    });
+  },
+  "branch1 pack": function(test) {
+    var pack = new Pack(GitTestData.packBranch1)
+    pack.parseAll(function(err) {
+      if (err) throw err;
+      test.deepEqual(pack.getObjects(), 
+        [ { type: 'commit'
+          , sha: '9f82761f8982d751097a922933467b798ae0158d'
+          , data: 'tree 6341864dce4bc028f1ead9277261b98cecf6a4e5\nparent b3453be87b70a0c5dea28aacd49cf34ddb91a8c5\nauthor Daniel Lucraft <dan@fluentradical.com> 1293969635 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293969635 +0000\n\nAdded LICENSE and a branch note to the README\n'
+        }
+        , { type: 'commit'
+          , sha: 'b3453be87b70a0c5dea28aacd49cf34ddb91a8c5'
+          , data: 'tree c44942a959a822a3a785ed7c4a658db9690dd175\nauthor Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\ncommitter Daniel Lucraft <dan@fluentradical.com> 1293454753 +0000\n\nAdd sample files\n'
+        }
+        , { type: 'tree'
+          , sha: '6341864dce4bc028f1ead9277261b98cecf6a4e5'
+          , data: '100644 LICENSE\u0000\u00b4\u00dcW\u00ad\u00d3\u00d6\u00ca\u00c06\u0082\u00c4I\u0091\u00f2w:\u00a6\u00c8X\u009d100644 README\u0000n\u000f2\u00d2\u0099\u00a8\u00df\u00d5\u00cb>\u00b3@\u00fba\u00fe\u00bb\u0001\u00d8t440000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
+        }
+        , { type: 'blob'
+          , sha: 'b4dc57add3d6cac03682c44991f2773aa6c8589d'
+          , data: 'Do what you want with it, no comebacks.\n'
+        }
+        , { type: 'blob'
+          , sha: '6e0f32d299a8dfd5cb3eb340fb61febb01d87434'
+          , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n\nThis branch (branch1) has a new file and a modified file!\n'
+        }
+        , { type: 'tree'
+          , sha: 'ae511596e38ed675db0603a1344e4eea2f194634'
+          , data: '100644 foo.js\u0000\u00e5\u00aa\u00af\u00b7w\u0015Y\u00d9\u00db-\u00d8\u001fR\\\u00e70\u008bwq\u0010'
+        }
+        , { type: 'blob'
+          , sha: 'e5aaafb7771559d9db2dd81f525ce7308b777110'
+          , data: '// An example JavaScript file\n'
+        }
+        , { type: 'tree'
+          , sha: 'c44942a959a822a3a785ed7c4a658db9690dd175'
+          , data: '100644 README\u0000\u00fd*\u001d\u0088\u00b0\r\u0084\u0001\u00c0\u0090\177\u00c3\u00e2\u00d3\u00e2_\u0001\u00bbR\u00e740000 lib\u0000\u00aeQ\u0015\u0096\u00e3\u008e\u00d6u\u00db\u0006\u0003\u00a14NN\u00ea/\u0019F4'
+        }
+        , { type: 'blob'
+          , sha: 'fd2a1d88b00d8401c0907fc3e2d3e25f01bb52e7'
+          , data: 'Test Repo1\n==========\n\nJust a test repo for something I\'m working on\n'
+          , fromDelta: 
+             { type: 'ofs_delta'
+             , data: [ 128, 1, 69, 144, 69 ]
+             , base: '6e0f32d299a8dfd5cb3eb340fb61febb01d87434'
+          }
+        }
+        ]
+      )
+      test.done();
+    });
   }
 }
 
 exports['UploadPackParser'] = {
   "NAK": function(test) {
-    myDebug("NAK")
-    var uploadPackParser = new Git.UploadPackParser(GitTestData.uploadPackNAK)
-    uploadPackParser.parse()
-    test.deepEqual(uploadPackParser.getRemoteLines(), 
-                  ['Counting objects: 5, done.', 'Compressing objects: 100% (3/3), done.', 'Total 5 (delta 0), reused 0 (delta 0)'])
-    myDebug("NAK: done")
-    test.done()
+    var uploadPackParser = new UploadPackParser(GitTestData.uploadPackNAK)
+    uploadPackParser.parse(function(err, pack) {
+      test.deepEqual(uploadPackParser.getRemoteLines(), 
+                    ['Counting objects: 5, done.', 'Compressing objects: 100% (3/3), done.', 'Total 5 (delta 0), reused 0 (delta 0)'])
+      test.done()
+    });
   },
   "ACK": function(test) {
-    myDebug("ACK")
-    var uploadPackParser = new Git.UploadPackParser(GitTestData.uploadPackACK)
-    uploadPackParser.parse()
-    test.deepEqual(uploadPackParser.getRemoteLines(), 
-                  ['Counting objects: 8, done.', 'Compressing objects: 100% (6/6), done.', 'Total 6 (delta 0), reused 0 (delta 0)'])
-    myDebug("ACK: done")
-    test.done()
+    var uploadPackParser = new UploadPackParser(GitTestData.uploadPackACK)
+    uploadPackParser.parse(function(err, pack) {
+      test.deepEqual(uploadPackParser.getRemoteLines(), 
+                    ['Counting objects: 8, done.', 'Compressing objects: 100% (6/6), done.', 'Total 6 (delta 0), reused 0 (delta 0)'])
+      test.done()
+    });
   }
 }
 
 exports['nextPktLine()'] = function(test) {
-  myDebug("nextPktLine")
-  test.equal(Git.nextPktLine("0008NAK\nasdflijasdfj"), "NAK\n")
-  myDebug("nextPktLine: done")
+  test.equal(utils.nextPktLine("0008NAK\nasdflijasdfj"), "NAK\n")
   test.done()
 }
