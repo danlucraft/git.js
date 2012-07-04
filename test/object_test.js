@@ -1,9 +1,9 @@
-
-require('../lib/git-server')
+var Objects = require('../lib/git/objects')
+  , utils = require('../lib/git/utils')
 
 exports.Blob = {
   "has basic data": function(test) {
-    var blob = new Git.objects.Blob("sha123", "// An example JavaScript file")
+    var blob = new Objects.Blob("sha123", "// An example JavaScript file")
     test.equals(blob.sha, "sha123")
     test.equals(blob.type, "blob")
     test.equals(blob.data, "// An example JavaScript file")
@@ -15,16 +15,16 @@ var testCommitData = [116, 114, 101, 101, 32, 99, 52, 52, 57, 52, 50, 97, 57, 53
 
 exports.Commit = {
   "has basic data": function(test) {
-    var commit = new Git.objects.Commit("sha123", Git.bytesToString(testCommitData))
+    var commit = new Objects.Commit("sha123", utils.bytesToString(testCommitData))
     
     test.equals(commit.sha, "sha123")
     test.equals(commit.type, "commit")
-    test.equals(commit.data, Git.bytesToString(testCommitData))
+    test.equals(commit.data, utils.bytesToString(testCommitData))
     test.done()
   },
   
   "has commit information": function(test) {
-    var commit = new Git.objects.Commit("sha123", Git.bytesToString(testCommitData))
+    var commit = new Objects.Commit("sha123", utils.bytesToString(testCommitData))
     
     test.equals(commit.tree, "c44942a959a822a3a785ed7c4a658db9690dd175")
     test.equals(commit.author.name, "Daniel Lucraft")
@@ -43,15 +43,15 @@ var testTreeData = [49, 48, 48, 54, 52, 52, 32, 82, 69, 65, 68, 77, 69, 0, 253, 
 
 exports.Tree = {
   "has basic data": function(test) {
-    var tree = new Git.objects.Tree("sha123", Git.bytesToString(testTreeData))
+    var tree = new Objects.Tree("sha123", utils.bytesToString(testTreeData))
     test.equals(tree.sha, "sha123")
     test.equals(tree.type, "tree")
-    test.equals(tree.data, Git.bytesToString(testTreeData))
+    test.equals(tree.data, utils.bytesToString(testTreeData))
     test.done()
   },
   
   "has contents": function(test) {
-    var tree = new Git.objects.Tree("sha123", Git.bytesToString(testTreeData))
+    var tree = new Objects.Tree("sha123", utils.bytesToString(testTreeData))
     test.deepEqual(tree.contents, 
       [
         {

@@ -1,22 +1,24 @@
 require('../lib/git-server')
 
 var fs = require('fs')
+var Pack = require('../lib/git/pack')
+  , utils = require('../lib/git/utils')
 
 var fixturePackFile = function() {
   var arr = eval(fs.readFileSync("test/fixtures/pack.json").toString('binary'))
-  return Git.bytesToString(arr)
+  return utils.bytesToString(arr)
 }
 
 exports.PackFileParser = {
   "parses out objects": function(test) {
-    var packFile = new Git.Pack(fixturePackFile())
+    var packFile = new Pack(fixturePackFile())
     packFile.parseAll()
     test.equal(packFile.getObjects().length, 124)
     test.done()
   },
   
   "supports random access by offset": function(test) {
-    var packFile = new Git.Pack(fixturePackFile())
+    var packFile = new Pack(fixturePackFile())
     test.deepEqual(
       packFile.getObjectAtOffset(10229).id(), 
       { type: 'tree'
@@ -40,7 +42,7 @@ exports.PackFileParser = {
   },
   
   "supports random access of delta objects by offset": function(test) {
-    var packFile = new Git.Pack(fixturePackFile())
+    var packFile = new Pack(fixturePackFile())
     var object = packFile.getObjectAtOffset(11633)
     test.equals(object.type, "blob")
     test.equals(object.sha, "88a9ba3a43861008a937d585583fa21ad0e8066f")

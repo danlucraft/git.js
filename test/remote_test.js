@@ -1,8 +1,8 @@
-
-require('../lib/git-server')
+var GithubProxyRepo = require('../lib/git/github_repo')
+  , Remote = require('../lib/git/remote')
 
 var createTestRepo = function() {
-  return new Git.GithubProxyRepo("danlucraft", "clojure-dojo", "foopw") 
+  return new GithubProxyRepo("danlucraft", "clojure-dojo", "foopw") 
 }
   
 exports.Remote = {
@@ -27,31 +27,31 @@ exports.Remote = {
   },
   
   testMakeUriNoOptions: function(test) {
-    var remote = new Git.Remote(null, null, "http://google.com/")
+    var remote = new Remote(null, null, "http://google.com/")
     test.equals(remote.makeUri("/info/refs"), "http://google.com/info/refs")
     
-    remote = new Git.Remote(null, null, "http://google.com")
+    remote = new Remote(null, null, "http://google.com")
     test.equals(remote.makeUri("/info/refs"), "http://google.com/info/refs")
     
-    remote = new Git.Remote(null, null, "http://google.com")
+    remote = new Remote(null, null, "http://google.com")
     test.equals(remote.makeUri("/info/refs", {username: "danlucraft"}), "http://google.com/info/refs?username=danlucraft")
 
-    remote = new Git.Remote(null, null, "http://google.com")
+    remote = new Remote(null, null, "http://google.com")
     test.equals(remote.makeUri("/info/refs", {username: "danlucraft", password: "asdf"}), "http://google.com/info/refs?username=danlucraft&password=asdf")
     test.done()
   },
   
   testMakeUriWithOptions: function(test) {
-    var remote = new Git.Remote(null, null, "http://google.com?server=github.com")
+    var remote = new Remote(null, null, "http://google.com?server=github.com")
     test.equals(remote.makeUri("/info/refs"), "http://google.com/info/refs?server=github.com")
     
-    remote = new Git.Remote(null, null, "http://google.com/?server=github.com")
+    remote = new Remote(null, null, "http://google.com/?server=github.com")
     test.equals(remote.makeUri("/info/refs"), "http://google.com/info/refs?server=github.com")
     
-    remote = new Git.Remote(null, null, "http://google.com?server=github.com")
+    remote = new Remote(null, null, "http://google.com?server=github.com")
     test.equals(remote.makeUri("/info/refs", {username: "danlucraft"}), "http://google.com/info/refs?server=github.com&username=danlucraft")
     
-    remote = new Git.Remote(null, null, "http://google.com?server=github.com")
+    remote = new Remote(null, null, "http://google.com?server=github.com")
     test.equals(remote.makeUri("/info/refs", {username: "danlucraft", password: "asdf"}), "http://google.com/info/refs?server=github.com&username=danlucraft&password=asdf")
     test.done()
   }
