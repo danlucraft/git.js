@@ -1,4 +1,5 @@
-require('../lib/git-server')
+var HttpRemote = require('../lib/git/http_remote')
+  , utils = require('../lib/git/utils')
 
 var REMOTE_TEST_DATA = {
   infoRefs: {
@@ -28,14 +29,14 @@ var REMOTE_TEST_DATA = {
 exports.HttpRemote = {
   testParseDumbInfoRefs: function(test) {
     test.deepEqual(
-      Git.HttpRemote.parseInfoRefs(REMOTE_TEST_DATA.infoRefs.data),
+      HttpRemote.parseInfoRefs(REMOTE_TEST_DATA.infoRefs.data),
       REMOTE_TEST_DATA.infoRefs.result
     )
     test.done()
   },
 
   testParseObjectData: function(test) {
-    var commit = Git.HttpRemote.parseObjectData("123", Git.bytesToString(REMOTE_TEST_DATA.commitObjectData.data))
+    var commit = HttpRemote.parseObjectData("123", utils.bytesToString(REMOTE_TEST_DATA.commitObjectData.data))
     test.equals(commit.type, "commit")
     test.equals(commit.sha, "123")
     test.equals(commit.tree, "c6b93605bd1e2171b3094f70cf61133b8f749bda")
@@ -48,7 +49,7 @@ exports.HttpRemote = {
   
   testParsePackList: function(test) {
     test.deepEqual(
-      Git.HttpRemote.parsePackList(REMOTE_TEST_DATA.packList.data),
+      HttpRemote.parsePackList(REMOTE_TEST_DATA.packList.data),
       REMOTE_TEST_DATA.packList.result
     )
     test.done()

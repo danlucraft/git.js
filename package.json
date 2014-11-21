@@ -1,0 +1,30 @@
+
+{
+    "name" : "git.js",
+    "version" : "0.0.1",
+    "description" : "pure javascript implementation of git",
+    "directories" : {
+        "lib" : ".",
+        "test" : "test"
+    },
+    "dependencies" : {
+        "underscore":"1.X.X"
+    },
+    "devDependencies" : {
+        "tracejs" : "0.X.X"
+    },
+    "scripts" : {
+        "test" : "node test/index.js"
+    },
+    "repository" : {
+        "type" : "git",
+        "url" : "http://github.com/danlucraft/git.js.git"
+    },
+    "keywords" : [
+        "git",
+        "client",
+        "server"
+    ],
+    "license" : "MIT",
+    "engine" : { "node" : ">=0.4" }
+}

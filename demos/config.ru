@@ -16,7 +16,7 @@ class ServeGitJs
   
   def call(env)
     if env["PATH_INFO"] == "/git.min.js"
-      path = File.expand_path(File.dirname(__FILE__) + "/../lib/git.min.js")
+      path = File.expand_path(File.dirname(__FILE__) + "/../build/git.min.js")
       if File.exist?(path)
         content = File.read(path)
         status  = 200

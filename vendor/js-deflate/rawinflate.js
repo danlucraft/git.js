@@ -729,7 +729,7 @@ var zip_inflate_internal = function(buff, off, size) {
 
 var zip_inflate = function(str) {
     var i, j;
-
+    
     zip_inflate_start();
     zip_inflate_data = str;
     zip_inflate_pos = 0;
@@ -748,8 +748,7 @@ var zip_inflate = function(str) {
     result.compressedLength = zip_inflate_pos;
     return result;
 }
-
-if (! window.RawDeflate) RawDeflate = {};
-RawDeflate.inflate = zip_inflate;
+module.exports = zip_inflate;
+module.exports.source = arguments.callee.toString();
 
 })();

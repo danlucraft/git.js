@@ -1,4 +1,5 @@
-require('../../lib/git-server')
+var Repo = require('../../lib/git/repo')
+  , BranchCommand = require('../../lib/git/commands/branch-command')
 
 var path = require('path')
 
@@ -19,15 +20,15 @@ describe("git branch", function() {
   }
 
   beforeEach(function () {
-    repo = new Git.Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
+    repo = new Repo(path.join(__dirname, "../../test/fixtures/test-repo1/.git"))
   })
   
   it("should show a list of branches, with the current highlighted", function() {
-    var cmd = new Git.commands.BranchCommand(repo, [])
+    var cmd = new BranchCommand(repo, [])
 
     expectOutput(cmd, function(output) {
       expect(output).toMatch(/branch1/)
-      expect(output).toMatch(/\* master/)
+      expect(output).toMatch(/\* branch2/)
     })
   })
 })

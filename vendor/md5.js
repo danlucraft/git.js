@@ -4,8 +4,9 @@
 *  http://www.webtoolkit.info/
 *
 **/
- 
-MyMD5 = function (string) {
+
+var MyMD5;
+module.exports = MyMD5 = function (string) {
  
 	function RotateLeft(lValue, iShiftBits) {
 		return (lValue<<iShiftBits) | (lValue>>>(32-iShiftBits));
